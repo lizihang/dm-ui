@@ -1,24 +1,32 @@
 <template>
-  <div>
-    <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
+  <div class="login">
+    <el-form ref="loginForm" :model="form" :rules="rules" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
-      <el-form-item label="账号" prop="username">
-        <el-input type="text" placeholder="请输入账号" v-model="form.username"/>
+      <el-form-item prop="username">
+        <el-input type="text" placeholder="账号" v-model="form.username">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+        </el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
+      <el-form-item prop="password">
+        <el-input type="password" placeholder="密码" v-model="form.password" auto-complete="off">
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+        </el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" v-on:click="onSubmit('loginForm')">登录</el-button>
+      <el-form-item prop="code">
+        <el-input type="text" placeholder="验证码" v-model="form.code" auto-complete="off" style="width: 63%">
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+        </div>
+      </el-form-item>
+      <el-form-item style="width:100%;">
+        <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
       </el-form-item>
     </el-form>
-
-    <el-dialog title="温馨提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <span>请输入账号和密码</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -27,11 +35,13 @@
     name: "Login",
     data() {
       return {
+        codeUrl: "",
+        cookiePassword: "",
         form: {
           username: '',
-          password: ''
+          password: '',
+          code: ''
         },
-
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
         rules: {
           username: [
@@ -39,9 +49,11 @@
           ],
           password: [
             {required: true, message: '密码不可为空', trigger: 'blur'}
+          ],
+          code: [
+            {required: true, message: "验证码不能为空", trigger: "blur"}
           ]
         },
-
         // 对话框显示和隐藏
         dialogVisible: false
       }
@@ -52,7 +64,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
-            this.$router.push("/main");
+            this.$router.push("/home");
           } else {
             this.dialogVisible = true;
             return false;
@@ -63,16 +75,59 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss">
+  .login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-image: url("../assets/image/login-background.jpg");
+    background-size: cover;
+  }
+
   .login-box {
-    border: 1px solid #DCDFE6;
+    background: #ffffff;
     width: 350px;
     margin: 180px auto;
     padding: 35px 35px 15px 35px;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: 6px;
     box-shadow: 0 0 25px #909399;
+    .el-input {
+      height: 38px;
+      input {
+        height: 38px;
+      }
+    }
+    .input-icon {
+      height: 39px;
+      width: 14px;
+      margin-left: 2px;
+    }
+  }
+
+  /*.login-box {*/
+  /*  border: 1px solid #DCDFE6;*/
+  /*  width: 350px;*/
+  /*  margin: 180px auto;*/
+  /*  padding: 35px 35px 15px 35px;*/
+  /*  border-radius: 5px;*/
+  /*  -webkit-border-radius: 5px;*/
+  /*  -moz-border-radius: 5px;*/
+  /*  box-shadow: 0 0 25px #909399;*/
+  /*}*/
+
+  .login-code {
+    width: 33%;
+    height: 38px;
+    float: right;
+    img {
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  }
+
+  .login-code-img {
+    height: 38px;
   }
 
   .login-title {
