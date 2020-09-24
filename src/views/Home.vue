@@ -9,7 +9,8 @@
           <dm-header></dm-header>
         </el-header>
         <el-main>
-          <dm-main></dm-main>
+          <router-view/>
+          <!--<dm-main></dm-main>-->
         </el-main>
       </el-container>
     </el-container>
@@ -18,7 +19,7 @@
 
 <style>
   .el-aside {
-    background-color: #409EFF;
+    background-color: #545c64;
     height: 100vh;
   }
 
@@ -35,6 +36,7 @@
   import DmMain from "./frame/DmMain";
 
   export default {
+    name: "Home",
     components: {
       DmMenu,
       DmHeader,

@@ -5,7 +5,8 @@
       |
       <router-link to="/login">Login</router-link>
     </div>-->
-    <router-view/>
+    <!--<router-view/>-->
+    <home></home>
   </div>
 </template>
 
@@ -18,3 +19,13 @@
     height: 100%;
   }
 </style>
+
+<script>
+  import Home from "./views/Home";
+
+  export default {
+    components: {
+      Home
+    }
+  };
+</script>
