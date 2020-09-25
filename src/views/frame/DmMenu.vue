@@ -1,8 +1,6 @@
 <template>
   <div class="dm-menu">
     <el-menu default-active="1" class="el-menu-vertical-demo" :unique-opened=true
-             @open="handleOpen"
-             @close="handleClose"
              router
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
       <el-submenu index="1">

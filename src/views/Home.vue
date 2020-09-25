@@ -5,12 +5,11 @@
         <dm-menu></dm-menu>
       </el-aside>
       <el-container>
-        <el-header style="text-align: right; font-size: 16px">
+        <el-header height="65px" style="padding: 0">
           <dm-header></dm-header>
         </el-header>
         <el-main>
           <router-view/>
-          <!--<dm-main></dm-main>-->
         </el-main>
       </el-container>
     </el-container>
@@ -26,7 +25,9 @@
   .el-header {
     background-color: #409EFF;
     color: #333;
-    line-height: 60px;
+    /*line-height: 30px;*/
+    /*text-align: right;*/
+    /*font-size: 16px*/
   }
 </style>
 
