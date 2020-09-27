@@ -23,7 +23,7 @@
   }
 
   .el-header {
-    background-color: #409EFF;
+    /*background-color: #409EFF;*/
     color: #333;
     /*line-height: 30px;*/
     /*text-align: right;*/

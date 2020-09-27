@@ -5,11 +5,10 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
+  {
+    path: '/',
+    redirect:'/main'
+  },
   // {
   //   path: '/home',
   //   name: 'Home',
@@ -24,6 +23,16 @@ const routes = [
     path: '/main',
     name: 'main',
     component: () => import('../views/frame/DmMain')
+  },
+  {
+    path: '/table',
+    name: 'table',
+    component: () => import('../components/TestTable')
+  },
+  {
+    path: '/tab2',
+    name: 'tab2',
+    component: () => import('../components/Tab2')
   }
 ]
 
