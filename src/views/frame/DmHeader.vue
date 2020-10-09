@@ -13,13 +13,13 @@
       <span style="margin-right: 10px">{{username}}</span>
     </div>
     <div class="header-bottom">
-      <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab" @tab-click="clickTab">
-        <el-tab-pane label="首页" name="1" :key="0" :closable="false"></el-tab-pane>
+      <el-tabs v-model="activeIndex" type="card" @tab-remove="tabRemove" @tab-click="tabClick">
         <el-tab-pane
-                v-for="(item, index) in editableTabs"
-                :key="index+1"
+                v-for="(item, index) in $store.state.tabs"
+                :key="item.name"
                 :label="item.title"
-                :name="item.name">
+                :name="item.name"
+                :closable="item.closable">
         </el-tab-pane>
       </el-tabs>
 
@@ -35,36 +35,36 @@
         username: '翔宝大毛团',
         src: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
         editableTabsValue: '1',
-        editableTabs: [{
-          title: 'Tab 1',
-          name: '2',
-        }, {
-          title: 'Tab 2',
-          name: '3',
-        }],
+      }
+    },
+    computed: {
+      tabs() {
+        return this.$store.state.tabs;
+      },
+      //动态设置及获取当前激活的tab页
+      activeIndex: {
+        get() {
+          return this.$store.state.activeIndex;
+        },
+        set(val) {
+          this.$store.commit('set_active_index', val);
+        }
       }
     },
     methods: {
-      removeTab(targetName) {
-        let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              let nextTab = tabs[index + 1] || tabs[index - 1];
-              if (nextTab) {
-                activeName = nextTab.name;
-              }
-            }
-          });
+      tabRemove(targetName) {
+        this.$store.commit('delete_tabs', targetName);
+        // 如果激活的关闭的tab就是激活的tab
+        if (this.activeIndex === targetName) {
+          // 设置当前激活的路由
+          this.$store.commit('set_active_index', '1');
+          this.$router.push({path: '/main'});
         }
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
       },
-      clickTab(targetName) {
+      tabClick(targetName) {
+        // TODO
         const selectId = targetName.paneName;
         console.log(selectId);
-
         if (selectId == 1) {
           this.$router.push("/main")
         } else if (selectId == 2) {
@@ -72,6 +72,12 @@
         } else if (selectId == 3) {
           this.$router.push("/tab2")
         }
+
+        // let val = this.tabsPath.filter(item => thisTab.name == item.name)
+        // this.$router.push({
+        //   path: val[0].path
+        // })
+
       }
     }
   }

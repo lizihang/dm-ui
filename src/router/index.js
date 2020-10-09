@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
+
+// 解决同一个router点击多次报错问题
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error)
+}
 
 const routes = [
   {
     path: '/',
-    redirect:'/main'
+    redirect: '/main'
   },
-  // {
-  //   path: '/home',
-  //   name: 'Home',
-  //   component: Home
-  // },
   {
     path: '/login',
     name: 'Login',

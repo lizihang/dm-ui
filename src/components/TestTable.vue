@@ -2,7 +2,7 @@
   <div class="dm-main">
     <el-button type="primary" @click="show = !show">新增用户</el-button>
     <el-button type="primary" @click="dialogFormVisible = true">新增用户弹窗</el-button>
-    <el-table :data="tableData" border style="width: 100%; margin-top: 20px">
+    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px">
       <el-table-column prop="date" label="日期" width="180">
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="180">

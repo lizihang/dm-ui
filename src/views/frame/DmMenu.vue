@@ -3,31 +3,13 @@
     <el-menu default-active="1" class="el-menu-vertical-demo" :unique-opened=true
              router
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-      <el-submenu index="1">
+      <el-submenu v-for="menu in menus" :key="menu.index" :index="menu.index">
         <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
+          <i :class="menu.iclass"></i>
+          <span>{{menu.title}}</span>
         </template>
-        <el-menu-item-group title="分组一">
-          <el-menu-item index="/main">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="el-icon-document"></i>
-          <span>导航二</span>
-        </template>
-        <el-menu-item-group title="分组一">
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="2-3">选项3</el-menu-item>
-        </el-menu-item-group>
+        <el-menu-item v-for="sub in menu.submenus" :key="sub.subindex" :index="sub.subindex">{{sub.subtitle}}
+        </el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -35,7 +17,68 @@
 
 <script>
   export default {
-    name: "DmMenu"
+    name: "DmMenu",
+    data() {
+      return {
+        menus: [
+          {
+            index: '1',
+            title: '导航一',
+            iclass: 'el-icon-location',
+            submenus: [
+              {
+                subindex: 'table',
+                subtitle: '表格'
+              },
+              {
+                subindex: 'tab2',
+                subtitle: 'tab2'
+              }
+            ]
+          }, {
+            index: '2',
+            title: '导航二',
+            iclass: 'el-icon-document',
+            submenus: [
+              {
+                subindex: '2-1',
+                subtitle: '2-1'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    watch: {
+      '$route': function (to) {
+        console.log(to);
+        //1.判断是否需要新增页面
+        let flag = true
+        let name = to.name
+        if (name === 'main') {
+          flag = false;
+        }
+        for (let i = 0; i < this.$store.state.tabs.length; i++) {
+          if (name === this.$store.state.tabs[i].title) {
+            //设置为当前活跃tab
+            this.$store.commit('set_active_index', this.$store.state.tabs[i].name);
+            return false;
+          }
+        }
+        //2.新增页面
+        if (flag) {
+          //获得路由元数据的name和组件名
+          const thisName = to.name
+          //动态双向追加tabs
+          const tabData = {
+            title: thisName,
+            closable: true
+          }
+          console.log(tabData)
+          this.$store.commit('add_tabs', tabData)
+        }
+      }
+    }
   }
 </script>
 
