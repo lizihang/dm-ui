@@ -9,7 +9,8 @@ export default new Vuex.Store({
       {
         title: '首页',
         name: '1',
-        closable: false
+        closable: false,
+        path: '/main'
       }
     ],
     activeIndex: '1',

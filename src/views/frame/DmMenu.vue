@@ -67,12 +67,11 @@
         }
         //2.新增页面
         if (flag) {
-          //获得路由元数据的name和组件名
-          const thisName = to.name
           //动态双向追加tabs
           const tabData = {
-            title: thisName,
-            closable: true
+            title: name,
+            closable: true,
+            path: to.path
           }
           console.log(tabData)
           this.$store.commit('add_tabs', tabData)

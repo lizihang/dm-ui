@@ -34,7 +34,7 @@
       return {
         username: '翔宝大毛团',
         src: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-        editableTabsValue: '1',
+        editableTabsValue: '1'
       }
     },
     computed: {
@@ -62,22 +62,12 @@
         }
       },
       tabClick(targetName) {
-        // TODO
         const selectId = targetName.paneName;
         console.log(selectId);
-        if (selectId == 1) {
-          this.$router.push("/main")
-        } else if (selectId == 2) {
-          this.$router.push("/table")
-        } else if (selectId == 3) {
-          this.$router.push("/tab2")
-        }
-
-        // let val = this.tabsPath.filter(item => thisTab.name == item.name)
-        // this.$router.push({
-        //   path: val[0].path
-        // })
-
+        let val = this.$store.state.tabs.filter(item => selectId === item.name)
+        this.$router.push({
+          path: val[0].path
+        })
       }
     }
   }
