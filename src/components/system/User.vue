@@ -71,7 +71,7 @@
 
 <script>
   export default {
-    name: "TestMain",
+    name: "User",
     data() {
       const item = {
         date: '2016-05-02',
@@ -92,7 +92,6 @@
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
         this.dialogFormVisible = false;
       }
     }

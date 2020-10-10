@@ -1,8 +1,12 @@
 <template>
   <div class="dm-menu">
-    <el-menu default-active="1" class="el-menu-vertical-demo" :unique-opened=true
+    <el-menu :default-active="$route.path" class="el-menu-vertical-demo" :unique-opened=true
              router
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+      <el-menu-item index="/home/main">
+        <i class="el-icon-menu"></i>
+        <span slot="title">首页</span>
+      </el-menu-item>
       <el-submenu v-for="menu in menus" :key="menu.index" :index="menu.index">
         <template slot="title">
           <i :class="menu.iclass"></i>
@@ -19,47 +23,25 @@
   export default {
     name: "DmMenu",
     data() {
-      return {
-        menus: [
-          {
-            index: '1',
-            title: '导航一',
-            iclass: 'el-icon-location',
-            submenus: [
-              {
-                subindex: 'table',
-                subtitle: '表格'
-              },
-              {
-                subindex: 'tab2',
-                subtitle: 'tab2'
-              }
-            ]
-          }, {
-            index: '2',
-            title: '导航二',
-            iclass: 'el-icon-document',
-            submenus: [
-              {
-                subindex: '2-1',
-                subtitle: '2-1'
-              }
-            ]
-          }
-        ]
+      return {}
+    },
+    computed: {
+      menus: function () {
+        return this.$store.state.menus
       }
     },
+    methods: {},
     watch: {
       '$route': function (to) {
         console.log(to);
         //1.判断是否需要新增页面
         let flag = true
-        let name = to.name
-        if (name === 'main') {
+        let title = to.meta.title
+        if (title === '首页') {
           flag = false;
         }
         for (let i = 0; i < this.$store.state.tabs.length; i++) {
-          if (name === this.$store.state.tabs[i].title) {
+          if (title === this.$store.state.tabs[i].title) {
             //设置为当前活跃tab
             this.$store.commit('set_active_index', this.$store.state.tabs[i].name);
             return false;
@@ -69,11 +51,10 @@
         if (flag) {
           //动态双向追加tabs
           const tabData = {
-            title: name,
+            title: title,
             closable: true,
             path: to.path
           }
-          console.log(tabData)
           this.$store.commit('add_tabs', tabData)
         }
       }

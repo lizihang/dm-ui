@@ -34,14 +34,12 @@
 <script>
   import DmMenu from "./frame/DmMenu";
   import DmHeader from "./frame/DmHeader";
-  import DmMain from "./frame/DmMain";
 
   export default {
     name: "Home",
     components: {
       DmMenu,
       DmHeader,
-      DmMain
     }
   };
 </script>

@@ -58,12 +58,11 @@
         if (this.activeIndex === targetName) {
           // 设置当前激活的路由
           this.$store.commit('set_active_index', '1');
-          this.$router.push({path: '/main'});
+          this.$router.push({path: '/home'});
         }
       },
       tabClick(targetName) {
         const selectId = targetName.paneName;
-        console.log(selectId);
         let val = this.$store.state.tabs.filter(item => selectId === item.name)
         this.$router.push({
           path: val[0].path

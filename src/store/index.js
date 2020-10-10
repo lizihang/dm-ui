@@ -10,7 +10,47 @@ export default new Vuex.Store({
         title: '首页',
         name: '1',
         closable: false,
-        path: '/main'
+        path: '/home/main'
+      }
+    ],
+    menus: [
+      {
+        index: 'system',
+        title: '系统管理',
+        iclass: 'el-icon-location',
+        submenus: [
+          {
+            subindex: '/system/user',
+            subtitle: '用户管理'
+          },
+          {
+            subindex: '/system/role',
+            subtitle: '角色管理'
+          },
+          {
+            subindex: '/system/menu',
+            subtitle: '菜单管理'
+          },
+          {
+            subindex: '/system/department',
+            subtitle: '部门管理'
+          }
+        ]
+      },
+      {
+        index: 'log',
+        title: '日志管理',
+        iclass: 'el-icon-document',
+        submenus: [
+          {
+            subindex: '/log/login',
+            subtitle: '登录日志'
+          },
+          {
+            subindex: '/log/operate',
+            subtitle: '操作日志'
+          }
+        ]
       }
     ],
     activeIndex: '1',
@@ -25,7 +65,6 @@ export default new Vuex.Store({
     },
     // 删除tabs
     delete_tabs(state, name) {
-      console.log(name)
       let index = 0;
       for (let tab of state.tabs) {
         if (tab.name === name) {
