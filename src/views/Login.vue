@@ -1,25 +1,27 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="form" :rules="rules" class="login-box">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
       <el-form-item prop="username">
-        <el-input type="text" placeholder="账号" v-model="form.username">
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="密码" v-model="form.password" auto-complete="off">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
+      <!-- 功能暂放
       <el-form-item prop="code">
-        <el-input type="text" placeholder="验证码" v-model="form.code" auto-complete="off" style="width: 63%">
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode" class="login-code-img"/>
         </div>
       </el-form-item>
+      -->
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
@@ -37,13 +39,14 @@
       return {
         codeUrl: "",
         cookiePassword: "",
-        form: {
+        loginForm: {
           username: '',
           password: '',
-          code: ''
+          code: '',
+          uuid: ""
         },
         // 表单验证，需要在 el-form-item 元素中增加 prop 属性
-        rules: {
+        loginRules: {
           username: [
             {required: true, message: '账号不可为空', trigger: 'blur'}
           ],
@@ -54,20 +57,61 @@
             {required: true, message: "验证码不能为空", trigger: "blur"}
           ]
         },
-        // 对话框显示和隐藏
-        dialogVisible: false
+        loading: false,
+        redirect: undefined,
       }
     },
+    watch: {
+      $route: {
+        handler: function (route) {
+          this.redirect = route.query && route.query.redirect;
+        },
+        immediate: true
+      }
+    },
+    created() {
+      // this.getCode();
+      // this.getCookie();
+    },
     methods: {
-      onSubmit(formName) {
-        // 为表单绑定验证功能
-        this.$refs[formName].validate((valid) => {
+      getCode() {
+        this.getCodeImg().then(res => {
+          this.codeUrl = "data:image/gif;base64," + res.img;
+          this.loginForm.uuid = res.uuid;
+        });
+      },
+      getCookie() {
+        const username = Cookies.get("username");
+        const password = Cookies.get("password");
+        const rememberMe = Cookies.get('rememberMe')
+        this.loginForm = {
+          username: username === undefined ? this.loginForm.username : username,
+          password: password === undefined ? this.loginForm.password : decrypt(password),
+          rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+        };
+      },
+      handleLogin() {
+        this.$refs.loginForm.validate(valid => {
           if (valid) {
-            // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
-            this.$router.push("/home");
-          } else {
-            this.dialogVisible = true;
-            return false;
+            this.loading = true;
+            if (this.loginForm.rememberMe) {
+              Cookies.set("username", this.loginForm.username, {expires: 30});
+              Cookies.set("password", encrypt(this.loginForm.password), {expires: 30});
+              Cookies.set('rememberMe', this.loginForm.rememberMe, {expires: 30});
+            } else {
+              Cookies.remove("username");
+              Cookies.remove("password");
+              Cookies.remove('rememberMe');
+            }
+            this.$store
+                .dispatch("Login", this.loginForm)
+                .then(() => {
+                  this.$router.push({path: this.redirect || "/"});
+                })
+                .catch(() => {
+                  this.loading = false;
+                  // this.getCode();
+                });
           }
         });
       }
@@ -92,12 +136,15 @@
     padding: 35px 35px 15px 35px;
     border-radius: 6px;
     box-shadow: 0 0 25px #909399;
+
     .el-input {
       height: 38px;
+
       input {
         height: 38px;
       }
     }
+
     .input-icon {
       height: 39px;
       width: 14px;
@@ -120,6 +167,7 @@
     width: 33%;
     height: 38px;
     float: right;
+
     img {
       cursor: pointer;
       vertical-align: middle;

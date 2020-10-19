@@ -17,6 +17,11 @@ const routes = [
     meta: {title: '登录'}
   },
   {
+    path: '/404',
+    component: () => import('../views/error/404'),
+    hidden: true
+  },
+  {
     path: '/home',
     component: () => import('../views/Home.vue'),
     meta: {title: '首页'},
