@@ -32,13 +32,16 @@
 
 <script>
   import {getCodeImg} from "@/api/login";
+  import {login} from "@/api/login";
 
   export default {
     name: "Login",
     data() {
       return {
+        // 验证码图片base64
+        codeUrl: '',
         // 验证码
-        codeUrl: "",
+        validCode: '',
         // 登录表单
         loginForm: {
           username: '',
@@ -66,8 +69,9 @@
     methods: {
       getCode() {
         getCodeImg().then(res => {
-          console.log("getCode");
-          this.codeUrl = "data:image/gif;base64," + res.data.img;
+          console.log(res.data.data);
+          this.validCode = res.data.data.validCode
+          this.codeUrl = "data:image/gif;base64," + res.data.data.validStr
         });
       },
       showDefaultImg() {
@@ -76,7 +80,22 @@
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
+            console.log(this.loginForm);
             this.loading = true;
+            login(this.loginForm).then(res => {
+              console.log(res.data);
+              if (res.data.status) {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                location.href = '/home/main'
+              } else {
+                this.loading = false;
+                this.$message.error(res.data.msg);
+              }
+            })
+
           }
         });
       }

@@ -9,15 +9,10 @@ export function getCodeImg() {
 }
 
 // 登录方法
-export function login(username, password, code) {
-  const data = {
-    username,
-    password,
-    code,
-  }
+export function login(user) {
   return axios({
-    url: 'http://127.0.0.1:8081/login',
+    url: 'http://127.0.0.1:8081/user/login',
     method: 'post',
-    data: data
+    data: user
   })
 }
