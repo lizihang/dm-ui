@@ -5,6 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    isLogin: false,
+    user: {
+      username: '',
+      nickname: '',
+      createdate: '',
+      modifydate: '',
+    },
     tabs: [
       {
         title: '首页',
@@ -77,8 +84,21 @@ export default new Vuex.Store({
     // 设置当前激活的tab
     set_active_index(state, index) {
       this.state.activeIndex = index;
+    },
+    set_is_login(state, isLogin) {
+      this.state.isLogin = isLogin;
+      localStorage.setItem("isLogin", isLogin);
+    },
+    set_user(state, user) {
+      this.state.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
+    },
+    delete_user(state){
+      this.state.user = {}
+      localStorage.removeItem("user")
     }
   },
+  getters: {},
   actions: {},
   modules: {}
 })

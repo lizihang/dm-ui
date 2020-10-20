@@ -1,16 +1,20 @@
 <template>
   <div class="dm-header">
     <div class="header-top">
-      <el-dropdown>
-        <i class="el-icon-setting" style="font-size: 25px"></i>
+      <el-dropdown trigger="click" @command="handleCommand">
+        <div>
+          <el-avatar :src="src" style="margin: 4px 10px" size="small"></el-avatar>
+          <span>{{getNickName}}</span>
+          <i class="el-icon-caret-bottom"></i>
+        </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>查看</el-dropdown-item>
-          <el-dropdown-item>新增</el-dropdown-item>
-          <el-dropdown-item>删除</el-dropdown-item>
+          <el-dropdown-item command="profile">个人资料</el-dropdown-item>
+          <el-dropdown-item command="changePWD">修改密码</el-dropdown-item>
+          <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+          <!--调用方法的两种方式-->
+          <!--<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>-->
         </el-dropdown-menu>
       </el-dropdown>
-      <el-avatar :src="src" style="margin: 4px 10px" size="small"></el-avatar>
-      <span style="margin-right: 10px">{{username}}</span>
     </div>
     <div class="header-bottom">
       <el-tabs v-model="activeIndex" type="card" @tab-remove="tabRemove" @tab-click="tabClick">
@@ -22,7 +26,6 @@
                 :closable="item.closable">
         </el-tab-pane>
       </el-tabs>
-
     </div>
   </div>
 </template>
@@ -32,9 +35,7 @@
     name: "DmHeader",
     data() {
       return {
-        username: '翔宝大毛团',
         src: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-        editableTabsValue: '1'
       }
     },
     computed: {
@@ -49,6 +50,10 @@
         set(val) {
           this.$store.commit('set_active_index', val);
         }
+      },
+      getNickName() {
+        let user = JSON.parse(localStorage.getItem("user"));
+        return user.nickname;
       }
     },
     methods: {
@@ -67,6 +72,36 @@
         this.$router.push({
           path: val[0].path
         })
+      },
+      // 1.下拉菜单直接绑定@click.native="logout"，可以直接调用此方法
+      // 2.下拉菜单也可以用command方式，直接在handleCommand方法中处理
+      logout() {
+        this.$confirm('确定退出系统吗？', '退出系统', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit("set_is_login", false)
+          this.$store.commit("delete_user")
+          this.$router.replace('/login')
+          this.$message({
+            type: 'success',
+            message: '退出登录!'
+          });
+        }).catch(() => {
+        });
+      },
+      handleCommand(command) {
+        console.log(command);
+        if (command === 'profile') {
+          // TODO
+        }
+        if (command === 'changePWD') {
+          // TODO
+        }
+        if (command === 'logout') {
+          this.logout()
+        }
       }
     }
   }

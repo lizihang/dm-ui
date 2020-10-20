@@ -37,6 +37,13 @@
   export default {
     name: "Login",
     data() {
+      const validateCode = (rule, value, callback) => {
+        if (value !== this.validCode) {
+          callback(new Error('验证码输入错误'));
+        } else {
+          callback();
+        }
+      };
       return {
         // 验证码图片base64
         codeUrl: '',
@@ -57,7 +64,8 @@
             {required: true, message: '密码不可为空', trigger: 'blur'}
           ],
           code: [
-            {required: true, message: "验证码不能为空", trigger: "blur"}
+            {required: true, message: "验证码不能为空", trigger: "blur"},
+            {validator: validateCode, trigger: "blur"},
           ]
         },
         loading: false,
@@ -67,35 +75,43 @@
       this.getCode();
     },
     methods: {
+      // 获取验证码
       getCode() {
         getCodeImg().then(res => {
-          console.log(res.data.data);
           this.validCode = res.data.data.validCode
+          console.log(this.validCode);
           this.codeUrl = "data:image/gif;base64," + res.data.data.validStr
         });
       },
+      // 验证码获取失败时，默认显示图片
       showDefaultImg() {
-        this.codeUrl = require('@/assets/image/timg.jpg');
+        this.codeUrl = require('@/assets/image/timg.jpg')
       },
+      // 用户登录
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            console.log(this.loginForm);
+            // 验证通过
+            // console.log(this.loginForm)
             this.loading = true;
             login(this.loginForm).then(res => {
+              // 控制台打印信息
               console.log(res.data);
               if (res.data.status) {
-                this.$message({
-                  message: res.data.msg,
-                  type: 'success'
-                });
-                location.href = '/home/main'
+                // 登录成功，将user存到store中
+                this.$store.commit("set_is_login", true);
+                this.$store.commit("set_user", res.data.data.user);
+                // 跳转页面
+                this.$router.replace('/home/main')
+                // location.href = '/home/main'
               } else {
-                this.loading = false;
+                // 登录失败，弹出错误消息
                 this.$message.error(res.data.msg);
+                // 刷新验证码
+                this.getCode()
               }
+              this.loading = false;
             })
-
           }
         });
       }
