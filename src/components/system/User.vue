@@ -13,10 +13,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="id" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="birth" label="生日" width="180"></el-table-column>
-      <el-table-column prop="gender" label="性别" width="180"></el-table-column>
-      <el-table-column prop="addr" label="地址"></el-table-column>
+      <el-table-column prop="username" label="姓名" width="180"></el-table-column>
+      <el-table-column prop="nickname" label="昵称" width="180"></el-table-column>
+      <el-table-column prop="createdate" label="创建时间" width="180"></el-table-column>
+      <el-table-column prop="modifydate" label="修改时间"></el-table-column>
     </el-table>
     <!--新增form-->
     <el-dialog title="新增" :visible.sync="addFormVisible">
@@ -91,7 +91,7 @@
     methods: {
       findAll() {
         axios({
-          url: 'http://127.0.0.1:8081/user/findAll'
+          url: 'http://127.0.0.1:8081/user/queryList'
         }).then(res => {
           this.tableData = res.data
         })

@@ -81,7 +81,7 @@ const router = new VueRouter({
 
 // 导航守卫，登录
 router.beforeEach((to, from, next) => {
-  let isLogin = localStorage.getItem("isLogin") === 'true'
+  let isLogin = sessionStorage.getItem("isLogin") === 'true'
   if (to.path === "/login") {
     if (isLogin) {
       next("/home/main");

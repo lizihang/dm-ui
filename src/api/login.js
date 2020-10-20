@@ -16,3 +16,11 @@ export function login(user) {
     data: user
   })
 }
+
+export function register(user) {
+  return axios({
+    url: 'http://127.0.0.1:8081/user/register',
+    method: 'post',
+    data: user
+  })
+}

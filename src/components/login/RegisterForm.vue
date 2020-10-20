@@ -7,6 +7,11 @@
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
+      <el-form-item prop="nickname">
+        <el-input v-model="registerForm.nickname" type="text" auto-complete="off" placeholder="昵称">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+        </el-input>
+      </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="registerForm.password" type="password" auto-complete="off" placeholder="密码">
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
@@ -27,8 +32,8 @@
       </el-form-item>
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleRegister">
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
+          <span v-if="!loading">注 册</span>
+          <span v-else>注 册 中...</span>
         </el-button>
       </el-form-item>
     </el-form>
@@ -36,7 +41,7 @@
 </template>
 
 <script>
-  import {getCodeImg, login} from "@/api/login";
+  import {getCodeImg, register} from "@/api/login";
 
   export default {
     name: "RegisterForm",
@@ -48,14 +53,18 @@
           callback();
         }
       };
+      const validatePWD = (rule, value, callback) => {
+        callback();
+      };
       return {
         // 验证码图片base64
         codeUrl: '',
         // 验证码
         validCode: '',
-        // 登录表单
+        // 注册表单
         registerForm: {
           username: '',
+          nickname: '',
           password: '',
           password2: '',
           code: ''
@@ -65,8 +74,16 @@
           username: [
             {required: true, message: '账号不可为空', trigger: 'blur'}
           ],
+          nickname: [
+            {required: true, message: '昵称不可为空', trigger: 'blur'}
+          ],
           password: [
-            {required: true, message: '密码不可为空', trigger: 'blur'}
+            {required: true, message: '密码不可为空', trigger: 'blur'},
+            {validator: validatePWD, trigger: "blur"},
+          ],
+          password2: [
+            {required: true, message: '密码不可为空', trigger: 'blur'},
+            {validator: validatePWD, trigger: "blur"},
           ],
           code: [
             {required: true, message: "验证码不能为空", trigger: "blur"},
@@ -89,25 +106,25 @@
       showDefaultImg() {
         this.codeUrl = require('@/assets/image/timg.jpg')
       },
-      // 用户登录
+      // 用户注册
       handleRegister() {
-        this.$refs.loginForm.validate(valid => {
+        this.$refs.registerForm.validate(valid => {
           if (valid) {
             // 验证通过
-            // console.log(this.loginForm)
+            // console.log(this.registerForm)
             this.loading = true;
-            login(this.loginForm).then(res => {
+            register(this.registerForm).then(res => {
               // 控制台打印信息
               console.log(res.data);
               if (res.data.status) {
-                // 登录成功，将user存到store中
+                // 注册成功，自动登录，将user存到store中
                 this.$store.commit("set_is_login", true);
                 this.$store.commit("set_user", res.data.data.user);
                 // 跳转页面
                 this.$router.replace('/home/main')
                 // location.href = '/home/main'
               } else {
-                // 登录失败，弹出错误消息
+                // 注册失败，弹出错误消息
                 this.$message.error(res.data.msg);
                 // 刷新验证码
                 this.getCode()

@@ -87,15 +87,15 @@ export default new Vuex.Store({
     },
     set_is_login(state, isLogin) {
       this.state.isLogin = isLogin;
-      localStorage.setItem("isLogin", isLogin);
+      sessionStorage.setItem("isLogin", isLogin);
     },
     set_user(state, user) {
       this.state.user = user;
-      localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("user", JSON.stringify(user));
     },
     delete_user(state){
       this.state.user = {}
-      localStorage.removeItem("user")
+      sessionStorage.removeItem("user")
     }
   },
   getters: {},
