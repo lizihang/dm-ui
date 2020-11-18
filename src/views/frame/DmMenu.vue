@@ -7,12 +7,12 @@
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
       </el-menu-item>
-      <el-submenu v-for="menu in menus" :key="menu.index" :index="menu.index">
+      <el-submenu v-for="menu in menus" :key="menu.router" :index="menu.router">
         <template slot="title">
-          <i :class="menu.iclass"></i>
-          <span>{{menu.title}}</span>
+          <i :class="menu.icon_class"></i>
+          <span>{{menu.name}}</span>
         </template>
-        <el-menu-item v-for="sub in menu.submenus" :key="sub.subindex" :index="sub.subindex">{{sub.subtitle}}
+        <el-menu-item v-for="sub in menu.subMenus" :key="sub.router" :index="sub.router">{{sub.name}}
         </el-menu-item>
       </el-submenu>
     </el-menu>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+  import {getMenus} from "@/api/system";
+
   export default {
     name: "DmMenu",
     data() {
@@ -58,6 +60,13 @@
           this.$store.commit('add_tabs', tabData)
         }
       }
+    },
+    created() {
+      getMenus().then(res => {
+        let menus = res.data.data.menus
+        console.log(menus);
+        this.$store.commit('add_menus', menus);
+      })
     }
   }
 </script>

@@ -63,6 +63,10 @@ export default new Vuex.Store({
     activeIndex: '1',
   },
   mutations: {
+    // 添加菜单
+    add_menus(state, data) {
+      this.state.menus = data;
+    },
     // 添加tabs
     add_tabs(state, data) {
       let name = this.state.tabs.length + 1 + ''
@@ -93,7 +97,7 @@ export default new Vuex.Store({
       this.state.user = user;
       sessionStorage.setItem("user", JSON.stringify(user));
     },
-    delete_user(state){
+    delete_user(state) {
       this.state.user = {}
       sessionStorage.removeItem("user")
     }
