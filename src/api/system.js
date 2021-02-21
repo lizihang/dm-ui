@@ -1,5 +1,13 @@
 import axios from "axios";
 
+//配置请求时带上token
+axios.interceptors.request.use(config => {
+  if ( sessionStorage.getItem("Authorization")) {
+    config.headers.common['Authorization'] = sessionStorage.getItem("Authorization")
+  }
+  return config;
+})
+
 // 获取验证码
 export function getMenus() {
   return axios({

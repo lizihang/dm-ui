@@ -46,7 +46,7 @@
     <el-dialog title="修改" :visible.sync="updateFormVisible">
       <el-form ref="form" :model="updateForm" label-width="80px">
         <el-form-item label="姓名">
-          <el-input v-model="updateForm.name"></el-input>
+          <el-input v-model="updateForm.username"></el-input>
         </el-form-item>
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="选择日期" v-model="updateForm.birth" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>

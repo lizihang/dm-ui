@@ -22,40 +22,14 @@ export default new Vuex.Store({
     ],
     menus: [
       {
-        index: 'system',
-        title: '系统管理',
-        iclass: 'el-icon-location',
+        name: '基础资料',
+        router: 'base',
+        icon_class: 'el-icon-help',
         submenus: [
           {
-            subindex: '/system/user',
-            subtitle: '用户管理'
-          },
-          {
-            subindex: '/system/role',
-            subtitle: '角色管理'
-          },
-          {
-            subindex: '/system/menu',
-            subtitle: '菜单管理'
-          },
-          {
-            subindex: '/system/department',
-            subtitle: '部门管理'
-          }
-        ]
-      },
-      {
-        index: 'log',
-        title: '日志管理',
-        iclass: 'el-icon-document',
-        submenus: [
-          {
-            subindex: '/log/login',
-            subtitle: '登录日志'
-          },
-          {
-            subindex: '/log/operate',
-            subtitle: '操作日志'
+            name: '',
+            router: '',
+            icon_class: ''
           }
         ]
       }
@@ -93,13 +67,15 @@ export default new Vuex.Store({
       this.state.isLogin = isLogin;
       sessionStorage.setItem("isLogin", isLogin);
     },
-    set_user(state, user) {
-      this.state.user = user;
-      sessionStorage.setItem("user", JSON.stringify(user));
+    set_user(state, data) {
+      this.state.user = data.user;
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+      sessionStorage.setItem("Authorization", data.token);
     },
     delete_user(state) {
       this.state.user = {}
       sessionStorage.removeItem("user")
+      sessionStorage.removeItem("Authorization");
     }
   },
   getters: {},

@@ -17,7 +17,7 @@
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="valid-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img" @error="showDefaultImg"/>
+          <img :src="codeUrl" @click="getCode" class="valid-code-img" @error="showDefaultImg"/>
         </div>
       </el-form-item>
       <el-form-item style="width:100%;">
@@ -93,10 +93,10 @@
             login(this.loginForm).then(res => {
               // 控制台打印信息
               console.log(res.data);
-              if (res.data.status) {
+              if (res.data.status===200) {
                 // 登录成功，将user存到store中
                 this.$store.commit("set_is_login", true);
-                this.$store.commit("set_user", res.data.data.user);
+                this.$store.commit("set_user", res.data.data);
                 // 跳转页面
                 this.$router.replace('/home/main')
                 // location.href = '/home/main'

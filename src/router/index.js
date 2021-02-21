@@ -51,6 +51,11 @@ const routes = [
         path: 'role',
         component: () => import('../components/system/Role'),
         meta: {title: '角色管理', requireAuth: true},
+      },
+      {
+        path: 'menu',
+        component: () => import('../components/system/MenuConfig'),
+        meta: {title: '菜单管理', requireAuth: true}
       }
     ]
   },
