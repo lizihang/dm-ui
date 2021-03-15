@@ -1,9 +1,11 @@
 <template>
   <div class="index">
+
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>DM管理系统</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="changeForm">{{buttonTitle}}</el-button>
+        <el-button style="float: right; padding: 3px 50px" type="text" @click="changeLang">中英切换</el-button>
       </div>
       <login-form v-if="isLoginCard"></login-form>
       <register-form v-else></register-form>
@@ -27,6 +29,13 @@
       changeForm() {
         this.isLoginCard = !this.isLoginCard;
         this.buttonTitle = this.buttonTitle === '注册' ? '登录' : '注册'
+      },
+      changeLang() {
+        if (this.$i18n.locale === "en") {
+          this.$i18n.locale = 'zh';
+        } else if (this.$i18n.locale === 'zh') {
+          this.$i18n.locale = 'en';
+        }
       }
     },
     components: {
