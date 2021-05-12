@@ -14,9 +14,17 @@ export function login(user) {
   data.append('username',user.username);
   data.append('password',user.password);
   return axios({
-    url: 'http://127.0.0.1:8081/user/login',
+    url: 'http://127.0.0.1:8081/login',
     method: 'post',
     data: data
+  })
+}
+
+// 登出
+export  function logout(){
+  return axios({
+    url: 'http://127.0.0.1:8081/logout',
+    method: 'post'
   })
 }
 

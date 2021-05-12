@@ -10,7 +10,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="profile">个人资料</el-dropdown-item>
           <el-dropdown-item command="changePWD">修改密码</el-dropdown-item>
-          <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+          <el-dropdown-item command="handleLogout">退出登录</el-dropdown-item>
           <!--调用方法的两种方式-->
           <!--<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>-->
         </el-dropdown-menu>
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+  import {logout} from "@/api/login";
+
   export default {
     name: "DmHeader",
     data() {
@@ -75,19 +77,23 @@
       },
       // 1.下拉菜单直接绑定@click.native="logout"，可以直接调用此方法
       // 2.下拉菜单也可以用command方式，直接在handleCommand方法中处理
-      logout() {
+      handleLogout() {
         this.$confirm('确定退出系统吗？', '退出系统', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$store.commit("set_is_login", false)
-          this.$store.commit("delete_user")
-          this.$router.replace('/login')
-          this.$message({
-            type: 'success',
-            message: '退出登录!'
-          });
+          logout().then(res => {
+            if (res.data.status === 200) {
+              this.$store.commit("set_is_login", false)
+              this.$store.commit("delete_user")
+              this.$router.replace('/login')
+              this.$message({
+                type: 'success',
+                message: '退出登录!'
+              });
+            }
+          })
         }).catch(() => {
         });
       },
@@ -99,8 +105,8 @@
         if (command === 'changePWD') {
           // TODO
         }
-        if (command === 'logout') {
-          this.logout()
+        if (command === 'handleLogout') {
+          this.handleLogout()
         }
       }
     }
