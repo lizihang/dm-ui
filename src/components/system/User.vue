@@ -1,7 +1,18 @@
 <template>
   <div class="dm-main">
-    <el-button type="primary" @click="addFormVisible = true">新增</el-button>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px">
+    <el-form :inline="true" :model="param" class="demo-form-inline" size="mini">
+      <el-form-item label="姓名">
+        <el-input v-model="param.username"></el-input>
+      </el-form-item>
+      <el-form-item label="昵称">
+        <el-input v-model="param.nickname"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button @click="onReset">重置</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" :height="600">
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button-group>
@@ -12,53 +23,34 @@
           </el-button-group>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id" width="180"></el-table-column>
+      <el-table-column prop="id" label="id" width="80" sortable></el-table-column>
       <el-table-column prop="username" label="姓名" width="180"></el-table-column>
       <el-table-column prop="nickname" label="昵称" width="180"></el-table-column>
-      <el-table-column prop="createdate" label="创建时间" width="180"></el-table-column>
-      <el-table-column prop="modifydate" label="修改时间"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
+      <el-table-column prop="status" label="状态" width="180"></el-table-column>
+      <el-table-column prop="createUser" label="创建人" width="180"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+      <el-table-column prop="modifyUser" label="修改人"></el-table-column>
+      <el-table-column prop="modifyTime" label="修改时间"></el-table-column>
     </el-table>
-    <!--新增form-->
-    <el-dialog title="新增" :visible.sync="addFormVisible">
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="姓名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="form.birth" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="form.gender">
-            <el-radio label="男"></el-radio>
-            <el-radio label="女"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="form.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addUser">确 定</el-button>
-        <el-button @click="addFormVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
+    <el-pagination style="float: right"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        background
+        :total="total"
+        :current-page="param.pageNum"
+        :page-size="param.pageSize"
+        :page-sizes="[1, 5, 10, 20, 50, 100]"
+        layout="total, sizes, prev, pager, next, jumper">
+    </el-pagination>
     <!--更新form-->
     <el-dialog title="修改" :visible.sync="updateFormVisible">
       <el-form ref="form" :model="updateForm" label-width="80px">
-        <el-form-item label="姓名">
-          <el-input v-model="updateForm.username"></el-input>
+        <el-form-item label="昵称">
+          <el-input v-model="updateForm.nickname"></el-input>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="updateForm.birth" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="updateForm.gender">
-            <el-radio label="男"></el-radio>
-            <el-radio label="女"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="updateForm.addr"></el-input>
+        <el-form-item label="邮箱">
+          <el-input v-model="updateForm.email"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -70,118 +62,97 @@
 </template>
 
 <script>
-  import axios from "axios";
+import {queryUsers, updateUser, deleteUser} from "@/api/user";
 
-  export default {
-    name: "User",
-    data() {
-      return {
-        tableData: [],
-        addFormVisible: false,
-        updateFormVisible: false,
-        form: {
-          name: '',
-          birth: '',
-          gender: '男',
-          addr: ''
-        },
-        updateForm: {}
-      }
-    },
-    methods: {
-      findAll() {
-        axios({
-          url: 'http://127.0.0.1:8081/user/queryList'
-        }).then(res => {
-          this.tableData = res.data
-        })
+export default {
+  name: "User",
+  data() {
+    return {
+      // 分页数据
+      total: 0,
+      // 查询条件
+      param: {
+        username: '',
+        nickname: '',
+        pageNum: 1,
+        pageSize: 10,
       },
-      addUser() {
-        //1 发送请求
-        axios({
-          url: 'http://127.0.0.1:8081/user/save',
-          method: 'post',
-          data: this.form
-        }).then(res => {
-          console.log(res.data);
-          if (res.data.status) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            });
-            // 清空表单信息
-            this.form = {gender: '男'};
-            // 隐藏表单
-            this.addFormVisible = false;
-            // 刷新数据
-            this.findAll()
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-      },
-      openUpdateDialog(index, row) {
-        this.updateFormVisible = true;
-        this.updateForm = row;
-      },
-      updateUser() {
-        console.log(this.updateForm);
-        //1 发送请求
-        axios({
-          url: 'http://127.0.0.1:8081/user/update',
-          method: 'post',
-          data: this.updateForm
-        }).then(res => {
-          console.log(res.data);
-          if (res.data.status) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            });
-            // 隐藏表单
-            this.updateFormVisible = false;
-            // 刷新数据
-            this.findAll()
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-      },
-      deleteUser(index, row) {
-        axios({
-          method: 'delete',
-          url: 'http://127.0.0.1:8081/user/deleteById',
-          params: {
-            id: row.id
-          }
-        }).then(res => {
-          if (res.data.status) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            });
-            // 刷新数据
-            this.findAll()
-          } else {
-            this.$message.error(res.data.msg);
-          }
-        })
-      }
-    },
-    created() {
-      this.findAll()
+      // 列表数据
+      tableData: [],
+      // 更新用户record
+      updateFormVisible: false,
+      updateForm: {}
     }
+  },
+  methods: {
+    findAll() {
+      queryUsers(this.param).then(res => {
+        this.tableData = res.data.data.users
+        this.total = res.data.data.total
+      })
+    },
+    handleSizeChange(val) {
+      this.param.pageSize = val;
+      this.findAll();
+    },
+    handleCurrentChange(val) {
+      this.param.pageNum = val;
+      this.findAll();
+    },
+    onSubmit() {
+      this.findAll();
+    },
+    onReset() {
+      this.param = {
+        pageNum: 1,
+        pageSize: 10
+      };
+      this.findAll();
+    },
+    openUpdateDialog(index, row) {
+      this.updateFormVisible = true;
+      this.updateForm = row;
+    },
+    updateUser() {
+      console.log(this.updateForm);
+      //1 发送请求
+      updateUser(this.updateForm).then(res => {
+        console.log(res.data);
+        if (res.data.status) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          });
+          // 隐藏表单
+          this.updateFormVisible = false;
+          // 刷新数据
+          this.findAll()
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      })
+    },
+    deleteUser(index, row) {
+      deleteUser(row.id).then(res => {
+        if (res.data.status) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          });
+          // 刷新数据
+          this.findAll()
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      })
+    }
+  },
+  created() {
+    this.findAll()
   }
+}
 </script>
 
 <style scoped>
-  .transition-box {
-    margin-bottom: 10px;
-    width: 100%;
-    height: 450px;
-    border-radius: 4px;
-    padding: 40px 20px;
-    box-sizing: border-box;
-    margin-right: 20px;
-  }
+
 </style>

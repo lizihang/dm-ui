@@ -11,8 +11,8 @@ export function getCodeImg() {
 // 登录方法
 export function login(user) {
   let data = new FormData();
-  data.append('username',user.username);
-  data.append('password',user.password);
+  data.append('username', user.username);
+  data.append('password', user.password);
   return axios({
     url: 'http://127.0.0.1:8081/login',
     method: 'post',
@@ -21,7 +21,7 @@ export function login(user) {
 }
 
 // 登出
-export  function logout(){
+export function logout() {
   return axios({
     url: 'http://127.0.0.1:8081/logout',
     method: 'post'
