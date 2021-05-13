@@ -53,6 +53,11 @@ const routes = [
         meta: {title: '角色管理', requireAuth: true},
       },
       {
+        path: 'department',
+        component: () => import('@/components/system/Department'),
+        meta: {title: '部门管理', requireAuth: true},
+      },
+      {
         path: 'menu',
         component: () => import('../components/system/MenuConfig'),
         meta: {title: '菜单管理', requireAuth: true}

@@ -1,24 +1,29 @@
 <template>
-  <div>
+  <div class="dm-main">
     <el-form :inline="true" :model="param" class="demo-form-inline" size="mini">
-      <el-form-item label="角色名称">
-        <el-input v-model="param.roleName"></el-input>
+      <el-form-item label="部门名称">
+        <el-input v-model="param.deptname"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
         <el-button @click="onReset">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-row>
-      <el-button type="primary" @click="" size="mini">新增</el-button>
-      <el-button type="success" @click="" size="mini">修改</el-button>
-      <el-button type="danger" @click="" size="mini">删除</el-button>
-    </el-row>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" :height="550">
-      <el-table-column type="selection" width="50"></el-table-column>
+    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" :height="600">
+      <el-table-column label="操作" width="120">
+        <template slot-scope="scope">
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="openUpdateDialog(scope.$index,scope.row)"></el-button>
+            <el-popconfirm title="确定删除该部门吗？" @onConfirm="deleteUser(scope.$index,scope.row)">
+              <el-button type="primary" icon="el-icon-delete" size="mini" slot="reference"></el-button>
+            </el-popconfirm>
+          </el-button-group>
+        </template>
+      </el-table-column>
       <el-table-column prop="id" label="id" width="80" sortable></el-table-column>
-      <el-table-column prop="roleCode" label="角色编码" width="180"></el-table-column>
-      <el-table-column prop="roleName" label="角色名称" width="180"></el-table-column>
+      <el-table-column prop="username" label="姓名" width="180"></el-table-column>
+      <el-table-column prop="nickname" label="昵称" width="180"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
       <el-table-column prop="status" label="状态" width="180"></el-table-column>
       <el-table-column prop="createUser" label="创建人" width="180"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
@@ -39,28 +44,28 @@
 </template>
 
 <script>
-import {queryRoles} from "@/api/user";
+import {queryUsers, updateUser, deleteUser} from "@/api/user";
 
 export default {
-  name: "Role",
+  name: "Department",
   data() {
     return {
       // 分页数据
       total: 0,
       // 查询条件
       param: {
-        roleName: '',
+        deptname: '',
         pageNum: 1,
         pageSize: 10,
       },
       // 列表数据
-      tableData: []
+      tableData: [],
     }
   },
   methods: {
     findAll() {
-      queryRoles(this.param).then(res => {
-        this.tableData = res.data.data.list
+      queryUsers(this.param).then(res => {
+        this.tableData = res.data.data.users
         this.total = res.data.data.total
       })
     },
