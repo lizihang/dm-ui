@@ -41,104 +41,104 @@
 </template>
 
 <script>
-  import {getCodeImg, register} from "@/api/login";
+import {getCodeImg, register} from "@/api/login";
 
-  export default {
-    name: "RegisterForm",
-    data() {
-      const validateCode = (rule, value, callback) => {
-        if (value !== this.validCode) {
-          callback(new Error('验证码输入错误'));
-        } else {
-          callback();
-        }
-      };
-      const validatePWD = (rule, value, callback) => {
+export default {
+  name: "RegisterForm",
+  data() {
+    const validateCode = (rule, value, callback) => {
+      if (value !== this.validCode) {
+        callback(new Error('验证码输入错误'));
+      } else {
         callback();
-      };
-      return {
-        // 验证码图片base64
-        codeUrl: '',
-        // 验证码
-        validCode: '',
-        // 注册表单
-        registerForm: {
-          username: '',
-          nickname: '',
-          password: '',
-          password2: '',
-          code: ''
-        },
-        // 表单验证，需要在 el-form-item 元素中增加 prop 属性
-        registerRules: {
-          username: [
-            {required: true, message: '账号不可为空', trigger: 'blur'}
-          ],
-          nickname: [
-            {required: true, message: '昵称不可为空', trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: '密码不可为空', trigger: 'blur'},
-            {validator: validatePWD, trigger: "blur"},
-          ],
-          password2: [
-            {required: true, message: '密码不可为空', trigger: 'blur'},
-            {validator: validatePWD, trigger: "blur"},
-          ],
-          code: [
-            {required: true, message: "验证码不能为空", trigger: "blur"},
-            {validator: validateCode, trigger: "blur"},
-          ]
-        },
-        loading: false,
       }
-    },
-    methods: {
-      // 获取验证码
-      getCode() {
-        getCodeImg().then(res => {
-          this.validCode = res.data.data.validCode
-          console.log(this.validCode);
-          this.codeUrl = "data:image/gif;base64," + res.data.data.validStr
-        });
+    };
+    const validatePWD = (rule, value, callback) => {
+      callback();
+    };
+    return {
+      // 验证码图片base64
+      codeUrl: '',
+      // 验证码
+      validCode: '',
+      // 注册表单
+      registerForm: {
+        username: '',
+        nickname: '',
+        password: '',
+        password2: '',
+        code: ''
       },
-      // 验证码获取失败时，默认显示图片
-      showDefaultImg() {
-        this.codeUrl = require('@/assets/image/timg.jpg')
+      // 表单验证，需要在 el-form-item 元素中增加 prop 属性
+      registerRules: {
+        username: [
+          {required: true, message: '账号不可为空', trigger: 'blur'}
+        ],
+        nickname: [
+          {required: true, message: '昵称不可为空', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '密码不可为空', trigger: 'blur'},
+          {validator: validatePWD, trigger: "blur"},
+        ],
+        password2: [
+          {required: true, message: '密码不可为空', trigger: 'blur'},
+          {validator: validatePWD, trigger: "blur"},
+        ],
+        code: [
+          {required: true, message: "验证码不能为空", trigger: "blur"},
+          {validator: validateCode, trigger: "blur"},
+        ]
       },
-      // 用户注册
-      handleRegister() {
-        this.$refs.registerForm.validate(valid => {
-          if (valid) {
-            // 验证通过
-            // console.log(this.registerForm)
-            this.loading = true;
-            register(this.registerForm).then(res => {
-              // 控制台打印信息
-              console.log(res.data);
-              if (res.data.status) {
-                // 注册成功，自动登录，将user存到store中
-                this.$store.commit("set_is_login", true);
-                this.$store.commit("set_user", res.data.data.user);
-                // 跳转页面
-                this.$router.replace('/home/main')
-                // location.href = '/home/main'
-              } else {
-                // 注册失败，弹出错误消息
-                this.$message.error(res.data.msg);
-                // 刷新验证码
-                this.getCode()
-              }
-              this.loading = false;
-            })
-          }
-        });
-      }
+      loading: false,
+    }
+  },
+  methods: {
+    // 获取验证码
+    getCode() {
+      getCodeImg().then(res => {
+        this.validCode = res.data.data.validCode
+        console.log(this.validCode);
+        this.codeUrl = "data:image/gif;base64," + res.data.data.validStr
+      });
     },
-    created() {
-      this.getCode();
+    // 验证码获取失败时，默认显示图片
+    showDefaultImg() {
+      this.codeUrl = require('@/assets/image/timg.jpg')
     },
-  }
+    // 用户注册
+    handleRegister() {
+      this.$refs.registerForm.validate(valid => {
+        if (valid) {
+          // 验证通过
+          // console.log(this.registerForm)
+          this.loading = true;
+          register(this.registerForm).then(res => {
+            // 控制台打印信息
+            console.log(res.data);
+            if (res.data.status) {
+              // 注册成功，自动登录，将user存到store中
+              this.$store.commit("set_is_login", true);
+              this.$store.commit("set_user", res.data.data.user);
+              // 跳转页面
+              this.$router.replace('/home/main')
+              // location.href = '/home/main'
+            } else {
+              // 注册失败，弹出错误消息
+              this.$message.error(res.data.msg);
+              // 刷新验证码
+              this.getCode()
+            }
+            this.loading = false;
+          })
+        }
+      });
+    }
+  },
+  created() {
+    this.getCode();
+  },
+}
 </script>
 
 <style>

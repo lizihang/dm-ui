@@ -33,15 +33,16 @@
       <el-table-column prop="modifyUser" label="修改人"></el-table-column>
       <el-table-column prop="modifyTime" label="修改时间"></el-table-column>
     </el-table>
-    <el-pagination style="float: right"
-                   @size-change="handleSizeChange"
-                   @current-change="handleCurrentChange"
-                   background
-                   :total="total"
-                   :current-page="param.pageNum"
-                   :page-size="param.pageSize"
-                   :page-sizes="[1, 5, 10, 20, 50, 100]"
-                   layout="total, sizes, prev, pager, next, jumper">
+    <el-pagination
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      background
+      :total="total"
+      :current-page="param.pageNum"
+      :page-size="param.pageSize"
+      :page-sizes="[1, 5, 10, 20, 50, 100]"
+      layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!--更新form-->
     <el-dialog title="修改" :visible.sync="updateFormVisible">

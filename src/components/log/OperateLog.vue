@@ -7,9 +7,9 @@
 </template>
 
 <script>
-  export default {
-    name: "OperateLog"
-  }
+export default {
+  name: "OperateLog"
+}
 </script>
 
 <style scoped>

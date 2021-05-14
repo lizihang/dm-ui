@@ -17,29 +17,29 @@
 </template>
 
 <style>
-  .el-aside {
-    background-color: #545c64;
-    height: 100vh;
-  }
+.el-aside {
+  background-color: #545c64;
+  height: 100vh;
+}
 
-  .el-header {
-    /*background-color: #409EFF;*/
-    color: #333;
-    /*line-height: 30px;*/
-    /*text-align: right;*/
-    /*font-size: 16px*/
-  }
+.el-header {
+  /*background-color: #409EFF;*/
+  color: #333;
+  /*line-height: 30px;*/
+  /*text-align: right;*/
+  /*font-size: 16px*/
+}
 </style>
 
 <script>
-  import DmMenu from "./frame/DmMenu";
-  import DmHeader from "./frame/DmHeader";
+import DmMenu from "./frame/DmMenu";
+import DmHeader from "./frame/DmHeader";
 
-  export default {
-    name: "Home",
-    components: {
-      DmMenu,
-      DmHeader,
-    }
-  };
+export default {
+  name: "Home",
+  components: {
+    DmMenu,
+    DmHeader,
+  }
+};
 </script>
