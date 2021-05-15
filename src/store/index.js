@@ -5,12 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLogin: false,
     user: {
       username: '',
       nickname: '',
-      createdate: '',
-      modifydate: '',
+      status: '',
+      email: '',
+      createuser: '',
+      createtime: '',
+      modifyuser: '',
+      modifytime: '',
     },
     tabs: [
       {
@@ -63,19 +66,15 @@ export default new Vuex.Store({
     set_active_index(state, index) {
       this.state.activeIndex = index;
     },
-    set_is_login(state, isLogin) {
-      this.state.isLogin = isLogin;
-      sessionStorage.setItem("isLogin", isLogin);
-    },
     set_user(state, data) {
       this.state.user = data.user;
-      sessionStorage.setItem("user", JSON.stringify(data.user));
-      sessionStorage.setItem("Authorization", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("Authorization", data.token);
     },
     delete_user(state) {
       this.state.user = {}
-      sessionStorage.removeItem("user")
-      sessionStorage.removeItem("Authorization");
+      localStorage.removeItem("user")
+      localStorage.removeItem("Authorization");
     }
   },
   getters: {},

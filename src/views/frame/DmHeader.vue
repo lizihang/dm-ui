@@ -54,7 +54,7 @@ export default {
       }
     },
     getNickName() {
-      let user = JSON.parse(sessionStorage.getItem("user"));
+      let user = JSON.parse(localStorage.getItem("user"));
       return user.nickname;
     }
   },
@@ -85,7 +85,6 @@ export default {
       }).then(() => {
         logout().then(res => {
           if (res.data.status === 200) {
-            this.$store.commit("set_is_login", false)
             this.$store.commit("delete_user")
             this.$router.replace('/login')
             this.$message({

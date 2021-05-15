@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {getMenus} from "@/api/system";
+import {getMenus} from "@/api/menu";
 
 export default {
   name: "MenuConfig",

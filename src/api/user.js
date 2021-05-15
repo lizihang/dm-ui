@@ -9,14 +9,6 @@ export function queryUsers(param) {
   })
 }
 
-export function addUser(user) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/register',
-    method: 'post',
-    data: user
-  })
-}
-
 export function updateUser(user) {
   return axios({
     url: 'http://127.0.0.1:8081/user/updateUser',
