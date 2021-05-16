@@ -11,7 +11,7 @@ axios.interceptors.request.use(config => {
 
 // 拦截响应response，并做一些错误处理
 axios.interceptors.response.use(res => {
-  console.log("拦截401")
+      // console.log("拦截401")
       const status = res.data.status
       if (status === 401) {
         MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
