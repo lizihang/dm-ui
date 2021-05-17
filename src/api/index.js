@@ -10,6 +10,7 @@ axios.interceptors.request.use(config => {
 })
 
 // 拦截响应response，并做一些错误处理
+// TODO 学习promise
 axios.interceptors.response.use(res => {
       // console.log("拦截401")
       const status = res.data.status
@@ -31,10 +32,14 @@ axios.interceptors.response.use(res => {
         })
         return Promise.reject(new Error(res.data.msg))
       } else if (status !== 200) {
+        /*
         Notification.error({
           title: res.data.msg
         })
         return Promise.reject('error')
+        */
+        // TODO 除了错误码500之外的错误，暂时不统一处理，而是在各个方法中处理
+        return res
       } else {
         return res
       }

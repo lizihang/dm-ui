@@ -66,6 +66,11 @@ const routes = [
         path: 'profile',
         component: () => import('../components/system/Profile'),
         meta: {title: '个人信息', requireAuth: true}
+      },
+      {
+        path: 'dict',
+        component: () => import('../components/system/DictConfig'),
+        meta: {title: '字典管理', requireAuth: true}
       }
     ]
   },
