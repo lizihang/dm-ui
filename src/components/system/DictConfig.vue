@@ -10,10 +10,10 @@
       <el-form-item label="状态">
         <el-select v-model="param.status" placeholder="">
           <el-option
-                  v-for="state in dict_status"
-                  :key="state.dictKey"
-                  :label="state.dictValue"
-                  :value="state.dictKey">
+            v-for="state in dict_status"
+            :key="state.dictKey"
+            :label="state.dictValue"
+            :value="state.dictKey">
           </el-option>
         </el-select>
       </el-form-item>
@@ -28,7 +28,7 @@
       <el-button type="danger" @click="deleteDict" size="mini">删除</el-button>
       <el-button type="warning" @click="openDetail" size="mini">详情</el-button>
     </el-row>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="550">
+    <el-table ref="dataTable" :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="550">
       <el-table-column label="" width="35">
         <template slot-scope="scope">
           <el-radio :label="scope.row.dictId" v-model="radioId">&nbsp;</el-radio>
@@ -44,17 +44,17 @@
       <el-table-column prop="modifyTime" label="修改时间" width="180"></el-table-column>
     </el-table>
     <el-pagination
-            style="float: right"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            background
-            :total="total"
-            :current-page="param.pageNum"
-            :page-size="param.pageSize"
-            :page-sizes="[1, 5, 10, 20, 50, 100]"
-            layout="total, sizes, prev, pager, next, jumper">
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      background
+      :total="total"
+      :current-page="param.pageNum"
+      :page-size="param.pageSize"
+      :page-sizes="[1, 5, 10, 20, 50, 100]"
+      layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-
+    
     <!-- 新增，修改dialog -->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
       <el-form ref="form" :model="dialogForm" :rules="rules" label-width="80px">
@@ -77,221 +77,278 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
-    <!--详情form-->
-    <el-dialog title="详细信息" :visible.sync="detailFormVisible" width="500px">
-      <el-form :inline="true" ref="detailForm" :model="detail" v-for="detail in detailList" label-width="80px" class="detail-form-inline">
-        <el-form-item label="字典值" size="mini">
-          <el-input v-model="detail.dictKey" class="detail-input" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="字典名" size="mini">
-          <el-input v-model="detail.dictValue" class="detail-input" size="mini"></el-input>
-        </el-form-item>
-      </el-form>
+    <!--
+      <el-dialog title="详细信息" :visible.sync="detailFormVisible" width="600px">
+        <el-table :data="detailList" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" :height="550">
+          <el-table-column prop="id" label="主键" width="120"></el-table-column>
+          <el-table-column prop="dictId" label="字典号" width="160"></el-table-column>
+          <el-table-column prop="dictKey" label="字典值" width="180"></el-table-column>
+          <el-table-column prop="dictValue" label="字典名称" width="80"></el-table-column>
+        </el-table>
+      </el-dialog>
+    -->
+    <el-dialog title="详细信息" :visible.sync="detailFormVisible" width="800px">
+      <editTable
+        ref="editTable"
+        :show-index="false"
+        :tableData="detailList"
+        :height="tableHeight"
+        :disabled="disabled"
+        :tableHeader="tableHeader"
+        :main-primary="mainPrimary"
+        @addRecord="addRecord"
+        @deleteRecord="deleteRecord"
+        @updateRecord="updateRecord"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {queryDictList, queryDictInfo, addDict, updateDict} from "@/api/system";
-  import {selectDictValue} from "@/utils";
+import {queryDictList, queryDictInfo, addDict, updateDict, deleteDict} from "@/api/system";
+import {selectDictValue} from "@/utils";
+import EditTable from "@/components/table/EditTable";
 
-  export default {
-    name: "DictConfig",
-    data() {
-      return {
-        radioId: '',
-        // 分页数据
-        total: 0,
-        // 查询条件
-        param: {
-          dictID: '',
-          dictName: '',
-          pageNum: 1,
-          pageSize: 10,
-        },
-        // 列表数据
-        tableData: [],
-        // 当前选中行的数据
-        currentRow: {},
-        // 状态字典
-        dict_status: [],
-        // dialog相关
-        dialogTitle: '',
-        dialogVisible: false,
-        // flag = true 表单为新增，flag = false
-        dialogFlag: '',
-        dialogForm: {
-          remark: '',
-          status: '70'
-        },
-        // 表单校验
-        rules: {
-          dictId: [
-            {required: true, message: "字典号不能为空", trigger: "blur"}
-          ],
-          dictName: [
-            {required: true, message: "字典名称不能为空", trigger: "blur"}
-          ]
-        },
-        // 详情相关
-        detailFormVisible: false,
-        detailList: [{
-          dictKey: '',
-          dictValue: '',
-        }],
-      }
-    },
-    methods: {
-      // 查询数据
-      findAll() {
-        queryDictList(this.param).then(res => {
-          this.tableData = res.data.data.list
-          this.total = res.data.data.total
-          // 处理单选radio
-          this.currentRow = res.data.data.list[0]
-          this.radioId = this.currentRow.dictId
-        })
+export default {
+  name: "DictConfig",
+  data() {
+    return {
+      radioId: '',
+      // 分页数据
+      total: 0,
+      // 查询条件
+      param: {
+        dictID: '',
+        dictName: '',
+        pageNum: 1,
+        pageSize: 10,
       },
-      // 查询状态字典
-      getStatus() {
-        queryDictInfo("dict_status").then(res => {
-          this.dict_status = res.data.data
-        })
+      // 列表数据
+      tableData: [],
+      // 当前选中行的数据
+      currentRow: {},
+      // 状态字典
+      dict_status: [],
+      // dialog相关
+      dialogTitle: '',
+      dialogVisible: false,
+      // flag = true 表单为新增，flag = false
+      dialogFlag: '',
+      dialogForm: {
+        remark: '',
+        status: '70'
       },
-      // 查询按钮
-      onSubmit() {
-        this.findAll();
+      // 表单校验
+      rules: {
+        dictId: [
+          {required: true, message: "字典号不能为空", trigger: "blur"}
+        ],
+        dictName: [
+          {required: true, message: "字典名称不能为空", trigger: "blur"}
+        ]
       },
-      // 重置按钮
-      onReset() {
-        this.param = {
-          pageNum: 1,
-          pageSize: 10
-        };
-        this.findAll();
-      },
-      // 处理分页，当前页大小改变
-      handleSizeChange(val) {
-        this.param.pageSize = val;
-        this.findAll();
-      },
-      // 处理分页，当前页数改变
-      handleCurrentChange(val) {
-        this.param.pageNum = val;
-        this.findAll();
-      },
-      // 字典状态字典翻译
-      statusFormatter(row, column) {
-        return selectDictValue(this.dict_status, row.status);
-      },
-      // 处理table行改变
-      handleRowChange(val) {
-        // 切换分页的时候，val为空，所以判断一下
-        if (val == null) {
-          this.currentRow = this.tableData[0];
-          this.radioId = this.currentRow.dictId;
-        } else {
-          this.currentRow = val;
-          this.radioId = val.dictId;
-        }
-      },
-      // 打开新建界面
-      openAddDialog() {
-        this.dialogTitle = '新增';
-        this.dialogVisible = true;
-        this.dialogFlag = true;
-        this.dialogForm = {
-          status: '70'
-        }
-      },
-      // 打开修改界面
-      openUpdateDialog() {
-        this.dialogTitle = '修改';
-        this.dialogVisible = true;
-        this.dialogFlag = false;
-        // Object.assign()解决双向绑定问题：在修改dialog修改数据后点击取消，主界面table数据改变的问题
-        this.dialogForm = Object.assign({}, this.currentRow);
-      },
-      // 表单提交，新增或修改
-      submit() {
-        this.$refs['form'].validate(valid => {
-          if (valid) {
-            // true 新增
-            if (this.dialogFlag) {
-              addDict(this.dialogForm).then(res => {
-                if (res.data.status === 200) {
-                  this.$message({
-                    message: res.data.msg,
-                    type: 'success'
-                  });
-                  // 隐藏表单
-                  this.dialogVisible = false;
-                  // 刷新数据
-                  this.findAll()
-                } else {
-                  this.$message.error(res.data.msg);
-                }
-              })
-            } else {
-              updateDict(this.dialogForm).then(res => {
-                if (res.data.status === 200) {
-                  this.$message({
-                    message: res.data.msg,
-                    type: 'success'
-                  });
-                  // 隐藏表单
-                  this.dialogVisible = false;
-                  // 刷新数据
-                  this.findAll()
-                } else {
-                  this.$message.error(res.data.msg);
-                }
-              })
-            }
-            //  清空form
-            this.dialogForm = {
-              status: '70'
-            };
-          }
-        });
-      },
-      // 表单取消按钮
-      cancel() {
-        this.$refs['form'].clearValidate();
-        this.dialogVisible = false;
-      },
-      // 删除字典
-      deleteDict() {
-
-      },
-      openDetail() {
-        this.detailFormVisible = true;
-        console.log(this.currentRow);
-        this.detailList = this.currentRow.dictInfoList;
-      }
-    },
-    created() {
-      this.findAll();
-      this.getStatus();
+      // 详情相关
+      detailFormVisible: false,
+      detailList: [{
+        dictKey: '',
+        dictValue: '',
+      }],
+      // editTable
+      tableHeight: 500,
+      disabled: false,
+      editTableData: [],
+      mainPrimary: {},
+      tableHeader: [
+        {name: 'id', title: '主键', width: '150', type: "text", disabled: true},
+        {name: 'dictId', title: '字典号', width: '150', type: "text", disabled: true},
+        {name: 'dictKey', title: '字典值', width: '150', type: "text", disabled: false, require: true},
+        {name: 'dictValue', title: '字典名', width: '150', type: "text", disabled: false, require: true},
+        {name: 'operate', title: '操作', width: '100', type: "operate", disabled: true, flag: 4},
+      ],
     }
+  },
+  methods: {
+    // 查询数据
+    findAll() {
+      queryDictList(this.param).then(res => {
+        this.tableData = res.data.data.list
+        this.total = res.data.data.total
+        // 处理单选radio
+        this.currentRow = res.data.data.list[0]
+        this.radioId = this.currentRow.dictId
+        this.mainPrimary.dictId = this.currentRow.dictId
+        // 处理单选表高亮
+        this.$refs.dataTable.setCurrentRow(this.currentRow);
+      })
+    },
+    // 查询状态字典
+    getStatus() {
+      queryDictInfo("dict_status").then(res => {
+        this.dict_status = res.data.data
+      })
+    },
+    // 查询按钮
+    onSubmit() {
+      this.findAll();
+    },
+    // 重置按钮
+    onReset() {
+      this.param = {
+        pageNum: 1,
+        pageSize: 10
+      };
+      this.findAll();
+    },
+    // 处理分页，当前页大小改变
+    handleSizeChange(val) {
+      this.param.pageSize = val;
+      this.findAll();
+    },
+    // 处理分页，当前页数改变
+    handleCurrentChange(val) {
+      this.param.pageNum = val;
+      this.findAll();
+    },
+    // 字典状态字典翻译
+    statusFormatter(row, column) {
+      return selectDictValue(this.dict_status, row.status);
+    },
+    // 处理table行改变
+    handleRowChange(val) {
+      // 切换分页的时候，val为空，所以判断一下
+      if (val == null) {
+        this.$refs.dataTable.setCurrentRow(this.tableData[0]);
+        this.currentRow = this.tableData[0];
+        this.radioId = this.currentRow.dictId;
+        this.mainPrimary.dictId = this.currentRow.dictId;
+      } else {
+        this.$refs.dataTable.setCurrentRow(val);
+        this.currentRow = val;
+        this.radioId = val.dictId;
+        this.mainPrimary.dictId = val.dictId;
+      }
+    },
+    // 打开新建界面
+    openAddDialog() {
+      this.dialogTitle = '新增';
+      this.dialogVisible = true;
+      this.dialogFlag = true;
+      this.dialogForm = {
+        status: '70'
+      }
+    },
+    // 打开修改界面
+    openUpdateDialog() {
+      this.dialogTitle = '修改';
+      this.dialogVisible = true;
+      this.dialogFlag = false;
+      // Object.assign()解决双向绑定问题：在修改dialog修改数据后点击取消，主界面table数据改变的问题
+      this.dialogForm = Object.assign({}, this.currentRow);
+    },
+    // 表单提交，新增或修改
+    submit() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          // true 新增
+          if (this.dialogFlag) {
+            addDict(this.dialogForm).then(res => {
+              if (res.data.status === 200) {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                // 隐藏表单
+                this.dialogVisible = false;
+                // 刷新数据
+                this.findAll()
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            })
+          } else {
+            updateDict(this.dialogForm).then(res => {
+              if (res.data.status === 200) {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                // 隐藏表单
+                this.dialogVisible = false;
+                // 刷新数据
+                this.findAll()
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            })
+          }
+          //  清空form
+          this.dialogForm = {
+            status: '70'
+          };
+        }
+      });
+    },
+    // 表单取消按钮
+    cancel() {
+      this.$refs['form'].clearValidate();
+      this.dialogVisible = false;
+    },
+    // 删除字典
+    deleteDict() {
+      this.$confirm('确定删除字典<' + this.currentRow.dictId + '>吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteDict(this.currentRow.dictId).then(res => {
+          if (res.data.status === 200) {
+            this.$message({
+              message: res.data.msg,
+              type: 'success'
+            });
+            // 刷新数据
+            this.findAll()
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        })
+      })
+    },
+    openDetail() {
+      this.detailFormVisible = true;
+      this.detailList = this.currentRow.dictInfoList;
+    },
+    // 子组edit-table件返回的时间
+    addRecord(index, row) {   //按钮返回的事件
+    },
+    deleteRecord(index, row) {   //单元格中数据改变 返回的事件
+    },
+    updateRecord(row) {
+    }
+  },
+  created() {
+    this.findAll();
+    this.getStatus();
+  },
+  components: {
+    EditTable
   }
+}
 </script>
 
 <style>
-  .detail-input {
-    width: 120px;
-  }
+.detail-input {
+  width: 120px;
+}
 
-  .detail-toolbar {
-    padding-bottom: 10px;
-  }
+.detail-toolbar {
+  padding-bottom: 10px;
+}
 
-  .el-dialog__body {
-    padding-top: 0px;
-  }
+.el-dialog__body {
+  padding-top: 0px;
+}
 
-  .detail-form-inline {
-    height: 40px;
-  }
+.detail-form-inline {
+  height: 40px;
+}
 </style>

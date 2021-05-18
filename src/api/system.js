@@ -36,3 +36,10 @@ export function updateDict(dict) {
     data: dict
   })
 }
+
+export function deleteDict(dictId) {
+  return axios({
+    url: 'http://127.0.0.1:8081/system/deleteDict/' + dictId,
+    method: 'delete'
+  })
+}

@@ -64,7 +64,6 @@ export default {
   created() {
     getMenus().then(res => {
       let menus = res.data.data
-      console.log(res.data);
       this.$store.commit('add_menus', menus);
     })
   }

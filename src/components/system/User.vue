@@ -95,7 +95,7 @@
 
 <script>
 import {queryUsers, updateUser, deleteUser} from "@/api/user";
-import {queryDict} from "@/api/system";
+import {queryDictInfo} from "@/api/system";
 import {selectDictValue} from "@/utils";
 
 export default {
@@ -136,7 +136,7 @@ export default {
     },
     // 查询状态字典
     getStatus() {
-      queryDict("dict_user_status").then(res => {
+      queryDictInfo("dict_user_status").then(res => {
         this.dict_user_status = res.data.data
       })
     },
