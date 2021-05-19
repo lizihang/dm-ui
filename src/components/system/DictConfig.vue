@@ -100,6 +100,13 @@
               @deleteRecord="deleteRecord"
               @updateRecord="updateRecord"/>
     </el-dialog>
+
+    <!--<edit-table-dialog
+            :visible="detailFormVisible"
+            :show-index="false"
+            :table-header="tableHeader"
+            :main-primary="mainPrimary"
+    />-->
   </div>
 </template>
 
@@ -107,6 +114,7 @@
   import {queryDictList, queryDictInfo, addDict, updateDict, deleteDict} from "@/api/system";
   import {selectDictValue} from "@/utils";
   import EditTable from "@/components/table/EditTable";
+  import EditTableDialog from "@/components/table/EditTableDialog";
 
   export default {
     name: "DictConfig",
@@ -179,6 +187,9 @@
           // 处理单选表高亮
           this.$refs.dataTable.setCurrentRow(this.currentRow);
         })
+      },
+      queryDetail(){
+        return Object.assign([], this.currentRow.dictInfoList);
       },
       // 查询状态字典
       getStatus() {
@@ -330,7 +341,8 @@
       this.getStatus();
     },
     components: {
-      EditTable
+      EditTable,
+      EditTableDialog
     }
   }
 </script>

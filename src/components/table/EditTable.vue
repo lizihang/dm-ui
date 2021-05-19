@@ -1,44 +1,50 @@
 <template>
-  <el-table ref="editTable"
-            :data="tData"
-            class="tb-edit"
-            border
-            stripe
-            :height="height"
-            :highlight-current-row="!disabled"
-            @current-change="handleRowChange">
-    <el-table-column v-if="showIndex" type="index" width="50"></el-table-column>
-    <el-table-column v-for="(item,index) in tableHeader"
-                     :key="index"
-                     :prop="item.name"
-                     :headerAlign="'center'"
-                     :align="item.align"
-                     :label="item.title"
-                     :fixed="item.fixed"
-                     :width="item.width"
-                     show-overflow-tooltip>
-      <template slot-scope="scope">
-        <el-select v-if="item.type === 'select'" size="small" v-model="scope.row[item.name]"
-                   @change="selectChange(scope.$index, scope.row)"
-                   placeholder="请选择内容"
-                   value="">
-          <el-option
-                  v-for="option in item.data"
-                  :disabled="disabled"
-                  :value="option.name"
-                  :key="option.name"
-                  :label="option.name"/>
-        </el-select>
-        <div v-else-if="item.type==='operate'">
-          <el-button type="text" size="small" @click.stop="onAdd(scope.$index,scope.row)">新增</el-button>
-          <el-button type="text" size="small" @click.stop="onDelete(scope.$index,scope.row)">删除</el-button>
-        </div>
-        <el-input v-else size="small" :disabled="item.disabled || disabled" v-model="scope.row[item.name]" placeholder="请输入内容"
-                  @change="inputChange(scope.$index, scope.row)"/>
-        <span>{{ scope.row[item.name] }}</span>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-row style="padding-bottom: 10px">
+      <el-button type="primary" size="mini" @click="">保存</el-button>
+      <el-button size="mini" @click="">刷新</el-button>
+    </el-row>
+    <el-table ref="editTable"
+              :data="tData"
+              class="tb-edit"
+              border
+              stripe
+              :height="height"
+              :highlight-current-row="!disabled"
+              @current-change="handleRowChange">
+      <el-table-column v-if="showIndex" type="index" width="50"></el-table-column>
+      <el-table-column v-for="(item,index) in tableHeader"
+                       :key="index"
+                       :prop="item.name"
+                       :headerAlign="'center'"
+                       :align="item.align"
+                       :label="item.title"
+                       :fixed="item.fixed"
+                       :width="item.width"
+                       show-overflow-tooltip>
+        <template slot-scope="scope">
+          <el-select v-if="item.type === 'select'" size="small" v-model="scope.row[item.name]"
+                     @change="selectChange(scope.$index, scope.row)"
+                     placeholder="请选择内容"
+                     value="">
+            <el-option
+                    v-for="option in item.data"
+                    :disabled="disabled"
+                    :value="option.name"
+                    :key="option.name"
+                    :label="option.name"/>
+          </el-select>
+          <div v-else-if="item.type==='operate'">
+            <el-button type="text" size="small" @click.stop="onAdd(scope.$index,scope.row)">新增</el-button>
+            <el-button type="text" size="small" @click.stop="onDelete(scope.$index,scope.row)">删除</el-button>
+          </div>
+          <el-input v-else size="small" :disabled="item.disabled || disabled" v-model="scope.row[item.name]" placeholder="请输入内容"
+                    @change="inputChange(scope.$index, scope.row)"/>
+          <span>{{ scope.row[item.name] }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
