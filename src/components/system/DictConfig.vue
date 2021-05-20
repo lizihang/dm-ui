@@ -87,7 +87,7 @@
         </el-table>
       </el-dialog>
     -->
-    <el-dialog title="详细信息" :visible.sync="detailFormVisible" width="800px">
+    <!--<el-dialog title="详细信息" :visible.sync="detailFormVisible" width="800px">
       <editTable
               ref="editTable"
               :show-index="false"
@@ -99,14 +99,15 @@
               @addRecord="addRecord"
               @deleteRecord="deleteRecord"
               @updateRecord="updateRecord"/>
-    </el-dialog>
+    </el-dialog>-->
 
-    <!--<edit-table-dialog
+    <edit-table-dialog
             :visible="detailFormVisible"
             :show-index="false"
             :table-header="tableHeader"
             :main-primary="mainPrimary"
-    />-->
+            @closeDialog="closeDialog"
+    />
   </div>
 </template>
 
@@ -175,6 +176,9 @@
       }
     },
     methods: {
+      closeDialog(){
+        this.detailFormVisible = false
+      },
       // 查询数据
       findAll() {
         queryDictList(this.param).then(res => {
@@ -188,8 +192,14 @@
           this.$refs.dataTable.setCurrentRow(this.currentRow);
         })
       },
+      //
       queryDetail(){
+        console.log("queryDetail")
         return Object.assign([], this.currentRow.dictInfoList);
+      },
+      //
+      saveDetail(){
+
       },
       // 查询状态字典
       getStatus() {
