@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {checkToken} from "@/api";
 
 Vue.use(VueRouter)
 
@@ -103,6 +104,49 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let hasToken = localStorage.getItem("Authorization") != null
   console.log("to.path=" + to.path + ";hasToken=" + hasToken)
+  // 1.当跳转到login界面时，判断token是否过期，没过期则跳转到主页，过期则重新登录
+  if (to.path === "/login") {
+    if (hasToken) {
+      checkToken().then(res => {
+        if (res.data.status === 200) {
+          next("/home/main");
+        }
+      })
+    } else {
+      next();
+    }
+  }
+  // 2.当跳转到个人信息界面时，如果token没过期，则跳转，过期则重新登录
+  else if (to.path === "/system/profile") {
+    if (hasToken) {
+      checkToken().then(res => {
+        if (res.data.status === 200) {
+          next();
+        }
+      })
+    } else {
+      next("/login");
+    }
+  }
+  // 跳转到其他页面
+  else {
+    if (JSON.parse(localStorage.getItem("user")).status === 0) {
+      next("/system/profile");
+    } else {
+      checkToken().then(res => {
+        if (res.data.status === 200) {
+          next();
+        }
+      }).catch(err => {
+      })
+    }
+  }
+})
+
+/*
+router.beforeEach((to, from, next) => {
+  let hasToken = localStorage.getItem("Authorization") != null
+  console.log("to.path=" + to.path + ";hasToken=" + hasToken)
   // 1.当跳转到login界面时，判断是否有token，有则认为已经登录，跳转到主页
   if (to.path === "/login") {
     if (hasToken) {
@@ -126,6 +170,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+*/
 
 // 解决用了keep-alive标签后，在home组件中activated()方法里this.$router.push(this.path)报错问题
 // 解决同一个router点击多次报错问题

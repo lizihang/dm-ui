@@ -24,6 +24,7 @@ axios.interceptors.response.use(res => {
           localStorage.removeItem("user")
           localStorage.removeItem("Authorization");
           location.replace("/login")
+        }).catch(err => {
         })
       } else if (status === 500) {
         Message({
@@ -61,6 +62,14 @@ axios.interceptors.response.use(res => {
       return Promise.reject(error)
     }
 )
+
+// 获取验证码
+export function checkToken() {
+  return axios({
+    url: 'http://127.0.0.1:8081/system/checkToken',
+    method: 'get'
+  })
+}
 
 export default axios
 
