@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import getters from './getters'
 
 Vue.use(Vuex)
 
@@ -19,6 +20,8 @@ export default new Vuex.Store({
       modifyuser: '',
       modifytime: '',
     },
+    // avatar: require('@/assets/image/profile.jpg'),
+    avatar: "http://localhost:8081/image/avatar/admin/kuafu.jpg",
     tabs: [
       {
         title: '首页',
@@ -83,7 +86,7 @@ export default new Vuex.Store({
       localStorage.removeItem("Authorization");
     }
   },
-  getters: {},
+  getters,
   actions: {},
   modules: {}
 })

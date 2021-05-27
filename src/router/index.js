@@ -130,15 +130,19 @@ router.beforeEach((to, from, next) => {
   }
   // 跳转到其他页面
   else {
-    if (JSON.parse(localStorage.getItem("user")).status === 0) {
-      next("/system/profile");
-    } else {
+    if (hasToken) {
       checkToken().then(res => {
         if (res.data.status === 200) {
-          next();
+          if (JSON.parse(localStorage.getItem("user")).status === 0) {
+            next("/system/profile");
+          } else {
+            next();
+          }
         }
       }).catch(err => {
       })
+    } else {
+      next("/login");
     }
   }
 })

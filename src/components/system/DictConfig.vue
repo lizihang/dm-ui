@@ -36,7 +36,16 @@
       </el-table-column>
       <el-table-column prop="dictId" label="字典号" width="160" sortable></el-table-column>
       <el-table-column prop="dictName" label="字典名称" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" width="80" :formatter="statusFormatter"></el-table-column>
+      <el-table-column prop="status" label="状态" width="80" :formatter="statusFormatter">
+        <template slot-scope="scope">
+          <el-switch
+                  v-model="scope.row.status"
+                  active-value="70"
+                  inactive-value="10"
+                  @change="handleStatusChange(scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注" width="180"></el-table-column>
       <el-table-column prop="createUser" label="创建人" width="180"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
@@ -176,7 +185,7 @@
       }
     },
     methods: {
-      closeDialog(){
+      closeDialog() {
         this.detailFormVisible = false
       },
       // 查询数据
@@ -193,12 +202,12 @@
         })
       },
       //
-      queryDetail(){
+      queryDetail() {
         console.log("queryDetail")
         return Object.assign([], this.currentRow.dictInfoList);
       },
       //
-      saveDetail(){
+      saveDetail() {
 
       },
       // 查询状态字典
@@ -344,6 +353,9 @@
       deleteRecord(index, row) {   //单元格中数据改变 返回的事件
       },
       updateRecord(row) {
+      },
+      handleStatusChange(row){
+
       }
     },
     created() {

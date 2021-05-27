@@ -35,3 +35,12 @@ export function queryRoles(param) {
     params: param
   })
 }
+
+// 用户头像上传
+export function uploadAvatar(data) {
+  return axios({
+    url: 'http://127.0.0.1:8081/system/updateAvatar',
+    method: 'post',
+    data: data
+  })
+}
