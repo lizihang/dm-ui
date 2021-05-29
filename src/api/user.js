@@ -9,6 +9,14 @@ export function queryUsers(param) {
   })
 }
 
+// 查询用户信息，不需要参数，因为请求带token，后台从token中取user
+export function queryUserInfo() {
+  return axios({
+    url: 'http://127.0.0.1:8081/user/queryUserInfo',
+    method: 'get'
+  })
+}
+
 export function updateUser(user) {
   return axios({
     url: 'http://127.0.0.1:8081/user/updateUser',

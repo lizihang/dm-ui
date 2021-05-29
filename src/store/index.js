@@ -71,6 +71,10 @@ export default new Vuex.Store({
       }
       this.state.tabs.splice(index, 1);
     },
+    // 删除tabs
+    clean_tabs(state) {
+      this.state.tabs.splice(1, state.tabs.length);
+    },
     // 设置当前激活的tab
     set_active_index(state, index) {
       this.state.activeIndex = index;

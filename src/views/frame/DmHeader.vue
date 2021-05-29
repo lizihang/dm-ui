@@ -9,8 +9,8 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="profile">个人资料</el-dropdown-item>
-          <el-dropdown-item command="changePWD">修改密码</el-dropdown-item>
-          <el-dropdown-item command="handleLogout">退出登录</el-dropdown-item>
+          <el-dropdown-item command="todo">待定</el-dropdown-item>
+          <el-dropdown-item command="handleLogout" divided>退出登录</el-dropdown-item>
           <!--调用方法的两种方式-->
           <!--<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>-->
         </el-dropdown-menu>
@@ -19,7 +19,7 @@
     <div class="header-bottom">
       <el-tabs v-model="activeIndex" type="card" @tab-remove="tabRemove" @tab-click="tabClick">
         <el-tab-pane
-          v-for="(item, index) in $store.state.tabs"
+          v-for="(item, index) in tabs"
           :key="item.name"
           :label="item.title"
           :name="item.name"
@@ -86,6 +86,7 @@ export default {
         logout().then(res => {
           if (res.data.status === 200) {
             this.$store.commit("delete_user")
+            this.$store.commit("clean_tabs")
             this.$router.replace('/login')
             this.$message({
               type: 'success',
@@ -99,9 +100,9 @@ export default {
     handleCommand(command) {
       console.log(command);
       if (command === 'profile') {
-        // TODO
+        this.$router.push('/system/profile')
       }
-      if (command === 'changePWD') {
+      if (command === 'todo') {
         // TODO
       }
       if (command === 'handleLogout') {

@@ -8,7 +8,7 @@
           </div>
           <div>
             <div class="text-center">
-              <userAvatar :user="user"/>
+              <user-avatar :user="user"/>
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
@@ -31,15 +31,14 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="18" :xs="24">
         <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>卡片名称</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-          </div>
-          <div v-for="o in 4" :key="o" class="text item">
-            {{'列表内容 ' + o }}
-          </div>
+          <el-tabs v-model="activeTab">
+            <el-tab-pane label="基本资料" name="userinfo">
+              <user-info :user="user" @queryUserInfo="queryUserInfo"/>
+            </el-tab-pane>
+            <el-tab-pane label="修改密码" name="resetPwd">修改密码</el-tab-pane>
+          </el-tabs>
         </el-card>
       </el-col>
     </el-row>
@@ -47,51 +46,67 @@
 </template>
 
 <script>
-  import userAvatar from "./userAvatar";
+import UserAvatar from "@/components/system/UserAvatar";
+import UserInfo from "@/components/system/UserInfo";
+import {queryUserInfo} from "@/api/user";
 
-  export default {
-    name: "Profile",
-    components: { userAvatar},
-    data() {
-      return {
-        user: {
-          username: 'admin',
-          nickname: '管理员',
-          email: 'admin@dm.com',
-          createTime: 'aa'
-        }
-      }
+export default {
+  name: "Profile",
+  components: {
+    UserAvatar,
+    UserInfo
+  },
+  data() {
+    return {
+      user: {},
+      activeTab: 'userinfo',
     }
+  },
+  methods: {
+    queryUserInfo() {
+      console.log("queryUserInfo");
+      queryUserInfo().then(res => {
+        if (res.data.status === 200) {
+          this.user = res.data.data;
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    }
+  },
+  created() {
+    this.queryUserInfo()
   }
+}
 </script>
 
 <style>
-  .text-center {
-    text-align: center
-  }
+.text-center {
+  text-align: center
+}
 
-  .pull-right {
-    float: right !important;
-  }
+.pull-right {
+  float: right !important;
+}
 
-  .list-group-striped > .list-group-item {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-    padding-left: 0;
-    padding-right: 0;
-  }
+.list-group-striped > .list-group-item {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
 
-  .list-group {
-    padding-left: 0px;
-    list-style: none;
-  }
+.list-group {
+  padding-left: 0px;
+  list-style: none;
+}
 
-  .list-group-item {
-    border-bottom: 1px solid #e7eaec;
-    border-top: 1px solid #e7eaec;
-    margin-bottom: -1px;
-    padding: 11px 0px;
-    font-size: 13px;
-  }
+.list-group-item {
+  border-bottom: 1px solid #e7eaec;
+  border-top: 1px solid #e7eaec;
+  margin-bottom: -1px;
+  padding: 11px 0px;
+  font-size: 13px;
+}
 </style>

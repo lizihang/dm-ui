@@ -57,6 +57,7 @@
   import {uploadAvatar} from "@/api/user";
 
   export default {
+    name: 'UserAvatar',
     props: {
       user: {
         type: Object
