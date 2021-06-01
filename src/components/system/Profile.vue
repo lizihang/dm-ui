@@ -16,12 +16,16 @@
                 <div class="pull-right">{{ user.username }}</div>
               </li>
               <li class="list-group-item">
-                用户名称
+                用户昵称
                 <div class="pull-right">{{ user.nickname }}</div>
               </li>
               <li class="list-group-item">
                 用户邮箱
                 <div class="pull-right">{{ user.email }}</div>
+              </li>
+              <li class="list-group-item">
+                手机号
+                <div class="pull-right">{{ user.phone }}</div>
               </li>
               <li class="list-group-item">
                 创建日期
@@ -34,10 +38,10 @@
       <el-col :span="18" :xs="24">
         <el-card class="box-card">
           <el-tabs v-model="activeTab">
-            <el-tab-pane label="基本资料" name="userinfo">
+            <el-tab-pane label="基本资料" name="user-info">
               <user-info :user="user" @queryUserInfo="queryUserInfo"/>
             </el-tab-pane>
-            <el-tab-pane label="修改密码" name="resetPwd">修改密码</el-tab-pane>
+            <el-tab-pane label="修改密码" name="reset-password">修改密码</el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -59,7 +63,7 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'userinfo',
+      activeTab: 'user-info',
     }
   },
   methods: {

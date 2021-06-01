@@ -19,10 +19,10 @@ export default new Vuex.Store({
       // avatar: "http://localhost:8081/image/avatar/admin/profile.jpg",
       avatar: '',
       status: '',
-      createuser: '',
-      createtime: '',
-      modifyuser: '',
-      modifytime: '',
+      createUser: '',
+      createTime: '',
+      modifyUser: '',
+      modifyTime: '',
     },
     tabs: [
       {
