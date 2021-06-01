@@ -9,7 +9,14 @@
         <el-button @click="onReset">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" :height="600">
+    <el-row>
+      <el-button type="primary" @click="" size="mini">新增</el-button>
+      <el-button type="success" @click="" size="mini">修改</el-button>
+      <el-button type="danger" @click="" size="mini">删除</el-button>
+    </el-row>
+    <el-table
+      :data="tableData" border style="width: 100%; margin-top: 20px"
+      :highlight-current-row="true" :height="600">
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button-group>

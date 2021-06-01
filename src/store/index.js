@@ -13,15 +13,17 @@ export default new Vuex.Store({
     user: {
       username: '',
       nickname: '',
-      status: '',
       email: '',
+      phone: '',
+      gender: '',
+      // avatar: "http://localhost:8081/image/avatar/admin/profile.jpg",
+      avatar: '',
+      status: '',
       createuser: '',
       createtime: '',
       modifyuser: '',
       modifytime: '',
     },
-    // avatar: require('@/assets/image/profile.jpg'),
-    avatar: "http://localhost:8081/image/avatar/admin/kuafu.jpg",
     tabs: [
       {
         title: '首页',

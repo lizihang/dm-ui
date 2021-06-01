@@ -2,9 +2,9 @@
   <div class="dm-header">
     <div class="header-top">
       <el-dropdown trigger="click" @command="handleCommand">
-        <div>
-          <el-avatar :src="src" style="margin: 4px 10px" size="small"></el-avatar>
-          <span>{{ getNickName }}</span>
+        <div class="admin-div">
+          <el-avatar :src="getAvatar" size="small"></el-avatar>
+          <span class="user-nickname">{{ getNickName }}</span>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -56,6 +56,10 @@ export default {
     getNickName() {
       let user = JSON.parse(localStorage.getItem("user"));
       return user.nickname;
+    },
+    getAvatar() {
+      let user = JSON.parse(localStorage.getItem("user"));
+      return "http://127.0.0.1:8081/avatar/" + user.avatar;
     }
   },
   methods: {
@@ -134,5 +138,11 @@ export default {
 .el-tabs__item {
   height: 29px !important;
   line-height: 29px !important;
+}
+
+.admin-div {
+  float: right;
+  height: 100%;
+  line-height: 36px;
 }
 </style>
