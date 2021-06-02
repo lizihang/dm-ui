@@ -118,7 +118,7 @@ export default {
             console.log(res.data);
             if (res.data.status) {
               // 注册成功，自动登录，将user存到store中
-              this.$store.commit("set_user", res.data.data.user);
+              this.$store.commit("set_login_info", res.data.data.user);
               // 跳转页面
               this.$router.replace('/home/main')
               // location.href = '/home/main'

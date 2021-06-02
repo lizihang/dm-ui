@@ -24,7 +24,7 @@ export default new Vuex.Store({
       modifyUser: '',
       modifyTime: '',
     },
-    tabs: [
+    defaultTabs: [
       {
         title: '首页',
         name: '1',
@@ -32,35 +32,21 @@ export default new Vuex.Store({
         path: '/home/main'
       }
     ],
-    menus: [
-      {
-        name: '基础资料',
-        router: 'base',
-        icon_class: 'el-icon-help',
-        submenus: [
-          {
-            name: '',
-            router: '',
-            icon_class: ''
-          }
-        ]
-      }
-    ],
+    tabs: [],
+    menus: [],
     activeIndex: '1',
-    // 测试严格模式
-    testStrict: 1,
   },
   mutations: {
     // 添加菜单
     add_menus(state, data) {
-      this.state.menus = data;
+      state.menus = data;
     },
     // 添加tabs
     add_tabs(state, data) {
-      let name = this.state.tabs.length + 1 + ''
+      let name = state.tabs.length + 1 + ''
       data['name'] = name
-      this.state.tabs.push(data);
-      this.state.activeIndex = name
+      state.tabs.push(data);
+      state.activeIndex = name
     },
     // 删除tabs
     delete_tabs(state, name) {
@@ -71,23 +57,31 @@ export default new Vuex.Store({
         }
         index++;
       }
-      this.state.tabs.splice(index, 1);
+      state.tabs.splice(index, 1);
     },
-    // 删除tabs
+    // 清空tabs
     clean_tabs(state) {
-      this.state.tabs.splice(1, state.tabs.length);
+      state.tabs = Object.assign([], state.defaultTabs)
     },
     // 设置当前激活的tab
     set_active_index(state, index) {
-      this.state.activeIndex = index;
+      state.activeIndex = index;
     },
-    set_user(state, data) {
-      this.state.user = data.user;
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("Authorization", data.token);
+    // 设置登录信息
+    set_login_info(state, data) {
+      // 1.设置user
+      let user = data.user;
+      state.user = user;
+      localStorage.setItem("user", JSON.stringify(user));
+      // 2.设置token
+      let token = data.token;
+      localStorage.setItem("Authorization", token);
+    },
+    set_user(state) {
+      state.user = JSON.parse(localStorage.getItem("user"));
     },
     delete_user(state) {
-      this.state.user = {}
+      state.user = {}
       localStorage.removeItem("user")
       localStorage.removeItem("Authorization");
     }

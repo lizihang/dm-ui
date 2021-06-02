@@ -9,8 +9,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="profile">个人资料</el-dropdown-item>
-          <el-dropdown-item command="todo">待定</el-dropdown-item>
-          <el-dropdown-item command="handleLogout" divided>退出登录</el-dropdown-item>
+          <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           <!--调用方法的两种方式-->
           <!--<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>-->
         </el-dropdown-menu>
@@ -36,9 +35,7 @@ import {logout} from "@/api/login";
 export default {
   name: "DmHeader",
   data() {
-    return {
-      src: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-    }
+    return {}
   },
   computed: {
     tabs() {
@@ -54,12 +51,10 @@ export default {
       }
     },
     getNickName() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      return user.nickname;
+      return this.$store.getters.nickname;
     },
     getAvatar() {
-      let user = JSON.parse(localStorage.getItem("user"));
-      return "http://127.0.0.1:8081/avatar/" + user.avatar;
+      return this.$store.getters.avatar;
     }
   },
   methods: {
@@ -106,10 +101,7 @@ export default {
       if (command === 'profile') {
         this.$router.push('/system/profile')
       }
-      if (command === 'todo') {
-        // TODO
-      }
-      if (command === 'handleLogout') {
+      if (command === 'logout') {
         this.handleLogout()
       }
     }
@@ -138,11 +130,5 @@ export default {
 .el-tabs__item {
   height: 29px !important;
   line-height: 29px !important;
-}
-
-.admin-div {
-  float: right;
-  height: 100%;
-  line-height: 36px;
 }
 </style>

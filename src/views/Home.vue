@@ -40,6 +40,11 @@ export default {
   components: {
     DmMenu,
     DmHeader,
+  },
+  created() {
+    // 处理刷新以后vuex中数据丢失问题
+    // 从localstorage中取user存到vuex
+    this.$store.commit("set_user");
   }
 };
 </script>

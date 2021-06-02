@@ -95,7 +95,7 @@ export default {
             console.log(res.data);
             if (res.data.status === 200) {
               // 登录成功，将user存到store中
-              this.$store.commit("set_user", res.data.data);
+              this.$store.commit("set_login_info", res.data.data);
               // 跳转页面
               this.$router.replace('/home/main')
               // location.href = '/home/main'

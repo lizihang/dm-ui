@@ -25,6 +25,15 @@ export function updateUser(user) {
   })
 }
 
+// 用户头像上传
+export function uploadAvatar(data) {
+  return axios({
+    url: 'http://127.0.0.1:8081/user/updateAvatar',
+    method: 'post',
+    data: data
+  })
+}
+
 export function deleteUser(id) {
   return axios({
     url: 'http://127.0.0.1:8081/user/deleteUserById',
@@ -44,11 +53,4 @@ export function queryRoles(param) {
   })
 }
 
-// 用户头像上传
-export function uploadAvatar(data) {
-  return axios({
-    url: 'http://127.0.0.1:8081/system/updateAvatar',
-    method: 'post',
-    data: data
-  })
-}
+

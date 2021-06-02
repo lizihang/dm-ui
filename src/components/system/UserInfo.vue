@@ -1,10 +1,13 @@
 <template>
   <el-form ref="form" :model="userinfo" :rules="rules" label-width="80px">
-    <el-form-item label="用户昵称" prop="nickName">
+    <el-form-item label="用户昵称" prop="nickname">
       <el-input v-model="userinfo.nickname"/>
     </el-form-item>
     <el-form-item label="邮箱" prop="email">
       <el-input v-model="userinfo.email" maxlength="50"/>
+    </el-form-item>
+    <el-form-item label="手机号" prop="phone">
+      <el-input v-model="userinfo.phone" maxlength="50"/>
     </el-form-item>
     <el-form-item label="性别">
       <el-radio-group v-model="userinfo.gender">
@@ -61,8 +64,7 @@ export default {
         if (valid) {
           updateUser(this.userinfo).then(res => {
             if (res.data.status === 200) {
-              // TODO 通知父组件更新数据
-              this.$emit("queryUserInfo")
+              this.$emit("updateInfo")
               this.$message.success(res.data.msg)
             }
           });

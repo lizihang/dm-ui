@@ -1,5 +1,9 @@
 const getters = {
-  //"http://localhost:8081/image/avatar/admin/profile.jpg"
-  avatar: state => "http://localhost:8081/avatar/" + state.user.avatar,
+  avatar: state => {
+    return "http://localhost:8081/avatar/" + state.user.avatar
+  },
+  nickname: state => {
+    return state.user.nickname
+  }
 }
 export default getters

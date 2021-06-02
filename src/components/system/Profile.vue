@@ -8,7 +8,7 @@
           </div>
           <div>
             <div class="text-center">
-              <user-avatar :user="user"/>
+              <user-avatar/>
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
@@ -39,7 +39,7 @@
         <el-card class="box-card">
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="user-info">
-              <user-info :user="user" @queryUserInfo="queryUserInfo"/>
+              <user-info :user="user" @updateInfo="queryUserInfo"/>
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="reset-password">修改密码</el-tab-pane>
           </el-tabs>
@@ -68,7 +68,6 @@ export default {
   },
   methods: {
     queryUserInfo() {
-      console.log("queryUserInfo");
       queryUserInfo().then(res => {
         if (res.data.status === 200) {
           this.user = res.data.data;
