@@ -28,8 +28,12 @@
                 <div class="pull-right">{{ user.phone }}</div>
               </li>
               <li class="list-group-item">
-                创建日期
+                创建时间
                 <div class="pull-right">{{ user.createTime }}</div>
+              </li>
+              <li class="list-group-item">
+                修改时间
+                <div class="pull-right">{{ user.modifyTime }}</div>
               </li>
             </ul>
           </div>

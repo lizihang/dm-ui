@@ -111,7 +111,6 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           // 验证通过
-          // console.log(this.registerForm)
           this.loading = true;
           register(this.registerForm).then(res => {
             // 控制台打印信息

@@ -97,7 +97,6 @@ export default {
       });
     },
     handleCommand(command) {
-      console.log(command);
       if (command === 'profile') {
         this.$router.push('/system/profile')
       }
