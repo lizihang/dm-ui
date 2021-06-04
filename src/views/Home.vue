@@ -45,6 +45,8 @@ export default {
     // 处理刷新以后vuex中数据丢失问题
     // 从localstorage中取user存到vuex
     this.$store.commit("set_user");
+    this.$store.commit("clean_tabs");
+    this.$router.replace('/home/main');
   }
 };
 </script>
