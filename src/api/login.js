@@ -3,7 +3,7 @@ import axios from "axios";
 // 获取验证码
 export function getCodeImg() {
   return axios({
-    url: 'http://127.0.0.1:8081/system/getCodeImg',
+    url: 'pro-api/system/getCodeImg',
     method: 'get'
   })
 }
@@ -14,7 +14,7 @@ export function login(user) {
   data.append('username', user.username);
   data.append('password', user.password);
   return axios({
-    url: 'http://127.0.0.1:8081/login',
+    url: 'pro-api/login',
     method: 'post',
     data: data
   })

@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  outputDir: 'assets',
+  outputDir: 'dist',
 
   chainWebpack(config) {
 
