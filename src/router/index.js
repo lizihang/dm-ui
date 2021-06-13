@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {checkToken} from "@/api";
+import {checkToken} from "@/api/login";
 
 Vue.use(VueRouter)
 

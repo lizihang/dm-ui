@@ -1,8 +1,12 @@
 import axios from "axios";
 import {Notification, MessageBox, Message} from 'element-ui'
 
+const instance = axios.create({
+  baseURL: process.env.VUE_APP_BASE_URL
+})
+
 //配置请求时带上token
-axios.interceptors.request.use(config => {
+instance.interceptors.request.use(config => {
   if (localStorage.getItem("Authorization")) {
     config.headers.common['Authorization'] = localStorage.getItem("Authorization")
   }
@@ -10,8 +14,7 @@ axios.interceptors.request.use(config => {
 })
 
 // 拦截响应response，并做一些错误处理
-// TODO 学习promise
-axios.interceptors.response.use(res => {
+instance.interceptors.response.use(res => {
       // console.log("拦截401")
       const status = res.data.status
       if (status === 401) {
@@ -63,14 +66,6 @@ axios.interceptors.response.use(res => {
     }
 )
 
-// 获取验证码
-export function checkToken() {
-  return axios({
-    url: 'http://127.0.0.1:8081/system/checkToken',
-    method: 'get'
-  })
-}
-
-export default axios
+export default instance
 
 

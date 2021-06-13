@@ -1,9 +1,9 @@
-import axios from "axios";
+import request from "@/api/index";
 
 // 用户相关方法
 export function queryUsers(param) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/queryUserList',
+  return request({
+    url: '/user/queryUserList',
     method: 'get',
     params: param
   })
@@ -11,15 +11,15 @@ export function queryUsers(param) {
 
 // 查询用户信息，不需要参数，因为请求带token，后台从token中取user
 export function queryUserInfo() {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/queryUserInfo',
+  return request({
+    url: '/user/queryUserInfo',
     method: 'get'
   })
 }
 
 export function updateUser(user) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/updateUser',
+  return request({
+    url: '/user/updateUser',
     method: 'post',
     data: user
   })
@@ -27,16 +27,16 @@ export function updateUser(user) {
 
 // 用户头像上传
 export function uploadAvatar(data) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/updateAvatar',
+  return request({
+    url: '/user/updateAvatar',
     method: 'post',
     data: data
   })
 }
 
 export function deleteUser(id) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/deleteUserById',
+  return request({
+    url: '/user/deleteUserById',
     method: 'delete',
     params: {
       id: id
@@ -44,13 +44,5 @@ export function deleteUser(id) {
   })
 }
 
-// 角色相关方法
-export function queryRoles(param) {
-  return axios({
-    url: 'http://127.0.0.1:8081/role/queryRoleList',
-    method: 'get',
-    params: param
-  })
-}
 
 

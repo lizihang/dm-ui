@@ -1,9 +1,9 @@
-import axios from "axios";
+import request from "@/api/index";
 
 // 获取验证码
 export function getCodeImg() {
-  return axios({
-    url: 'pro-api/system/getCodeImg',
+  return request({
+    url: '/system/getCodeImg',
     method: 'get'
   })
 }
@@ -13,8 +13,8 @@ export function login(user) {
   let data = new FormData();
   data.append('username', user.username);
   data.append('password', user.password);
-  return axios({
-    url: 'pro-api/login',
+  return request({
+    url: '/login',
     method: 'post',
     data: data
   })
@@ -22,16 +22,26 @@ export function login(user) {
 
 // 登出
 export function logout() {
-  return axios({
-    url: 'http://127.0.0.1:8081/logout',
+  return request({
+    url: '/logout',
     method: 'post'
   })
 }
 
+// 注册
 export function register(user) {
-  return axios({
-    url: 'http://127.0.0.1:8081/user/register',
+  return request({
+    url: '/user/register',
     method: 'post',
     data: user
+  })
+}
+
+
+// 检查token
+export function checkToken() {
+  return request({
+    url: '/system/checkToken',
+    method: 'get'
   })
 }
