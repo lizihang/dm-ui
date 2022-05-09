@@ -103,6 +103,7 @@ const router = new VueRouter({
 // 导航守卫，登录
 router.beforeEach((to, from, next) => {
   let hasToken = localStorage.getItem("Authorization") != null
+  console.log("from.path=" + from.path + ";hasToken=" + hasToken)
   console.log("to.path=" + to.path + ";hasToken=" + hasToken)
   // 1.当跳转到login界面时，判断token是否过期，没过期则跳转到主页，过期则重新登录
   if (to.path === "/login") {
