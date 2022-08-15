@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {logout} from "@/api/login";
+import {logout} from "@/api/security";
 
 export default {
   name: "DmHeader",
@@ -86,7 +86,7 @@ export default {
           if (res.data.status === 200) {
             this.$store.commit("delete_user")
             this.$store.commit("clean_tabs")
-            this.$router.replace('/login')
+            this.$router.replace('/security')
             this.$message({
               type: 'success',
               message: '退出登录!'

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {getMenus} from "@/api/menu";
+import {getMenus} from "@/api/user";
 
 export default {
   name: "DmMenu",

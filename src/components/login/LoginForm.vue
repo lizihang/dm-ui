@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {getCodeImg, login} from "@/api/login";
+import {getCodeImg, security} from "@/api/security";
 
 export default {
   name: "LoginForm",
@@ -89,7 +89,7 @@ export default {
         if (valid) {
           // 验证通过
           this.loading = true;
-          login(this.loginForm).then(res => {
+          security(this.loginForm).then(res => {
             // 控制台打印信息
             console.log(res.data);
             if (res.data.status === 200) {

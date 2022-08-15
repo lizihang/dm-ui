@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import {getMenus} from "@/api/menu";
+import {getMenus} from "@/api/user";
 import Treeselect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 

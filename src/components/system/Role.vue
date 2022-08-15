@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import {queryRoles} from "@/api/role";
+import {queryRoles} from "@/api/user";
 
 export default {
   name: "Role",

@@ -1,4 +1,6 @@
 import request from "@/api/index";
+
+let MODEL_PREFIX = "todo";
 // 获取字典
 
 // 获取字典列表

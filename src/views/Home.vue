@@ -46,7 +46,7 @@ export default {
     // 从localstorage中取user存到vuex
     this.$store.commit("set_user");
     this.$store.commit("clean_tabs");
-    this.$router.replace('/home/main');
+    // this.$router.replace('/home/main');
   }
 };
 </script>
