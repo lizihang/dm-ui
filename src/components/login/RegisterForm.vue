@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import {getCodeImg, register} from "@/api/security";
+import {getCodeImg} from "@/api/security";
+import {register} from "@/api/user";
 
 export default {
   name: "RegisterForm",
