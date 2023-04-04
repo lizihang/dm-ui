@@ -26,7 +26,7 @@
       <el-button type="success" @click="openUpdateDialog" size="mini">修改</el-button>
       <el-button type="danger" @click="deleteUser" size="mini">删除</el-button>
     </el-row>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="600">
+    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="550">
       <!-- 暂时不用这种在行中放操作按钮，样式没调比较丑
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
@@ -49,10 +49,10 @@
       <el-table-column prop="nickname" label="昵称" width="180" fixed="left"></el-table-column>
       <el-table-column prop="status" label="状态" width="80" :formatter="statusFormatter" fixed="left"></el-table-column>
       <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
-      <el-table-column prop="createUser" label="创建人" width="180"></el-table-column>
+      <el-table-column prop="createUser" label="创建人" width="120"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
-      <el-table-column prop="modifyUser" label="修改人"></el-table-column>
-      <el-table-column prop="modifyTime" label="修改时间"></el-table-column>
+      <el-table-column prop="modifyUser" label="修改人" width="120"></el-table-column>
+      <el-table-column prop="modifyTime" label="修改时间" width="180"></el-table-column>
     </el-table>
     <el-pagination
       style="float: right"
@@ -127,11 +127,13 @@ export default {
     // 查询数据
     findAll() {
       queryUsers(this.param).then(res => {
-        this.tableData = res.data.data.list
+        this.tableData = res.data.data.records
         this.total = res.data.data.total
         // 处理单选radio
-        this.currentRow = res.data.data.list[0]
-        this.radioId = this.currentRow.id
+        if (this.tableData) {
+          this.currentRow = res.data.data.records[0]
+          this.radioId = this.currentRow.id
+        }
       })
     },
     // 查询状态字典
@@ -210,7 +212,9 @@ export default {
     },
     // 字典状态字典翻译
     statusFormatter(row, column) {
-      return selectDictValue(this.dict_user_status, row.status);
+      // TODO 字典暂不实现
+      // return selectDictValue(this.dict_user_status, row.status);
+      return row.status;
     },
     // 处理table行改变
     handleRowChange(val) {
@@ -226,7 +230,7 @@ export default {
   },
   created() {
     this.findAll();
-    this.getStatus();
+    // this.getStatus();
   }
 }
 </script>

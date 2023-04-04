@@ -1,6 +1,5 @@
 <template>
   <div class="index">
-    
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>DM管理系统</span>

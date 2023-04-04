@@ -7,7 +7,7 @@ let MODEL_PREFIX = "todo";
 export function queryDictList(param) {
   return request({
     url: '/system/queryDictList',
-    method: 'get',
+    method: 'post',
     params: param
   })
 }
@@ -16,7 +16,7 @@ export function queryDictList(param) {
 export function queryDictInfo(dictId) {
   return request({
     url: '/system/queryDictInfo',
-    method: 'get',
+    method: 'post',
     params: {
       dictId: dictId
     }
@@ -42,7 +42,7 @@ export function updateDict(dict) {
 export function deleteDict(dictId) {
   return request({
     url: '/system/deleteDict/' + dictId,
-    method: 'delete'
+    method: 'post'
   })
 }
 
