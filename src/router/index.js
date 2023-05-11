@@ -90,6 +90,23 @@ const routes = [
         meta: {title: '操作日志', requireAuth: true},
       }
     ]
+  },
+  {
+    path: '/chat',
+    component: () => import('../views/Home.vue'),
+    meta: {title: 'ChatLM'},
+    children: [
+      {
+        path: 'page',
+        component: () => import('../views/chat/Chat.vue'),
+        meta: {title: '页面', requireAuth: false},
+      },
+      {
+        path: 'file',
+        component: () => import('../views/chat/ChatFile.vue'),
+        meta: {title: '文件', requireAuth: false},
+      },
+    ]
   }
 ]
 
