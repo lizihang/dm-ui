@@ -79,4 +79,10 @@ export function getMenus(param) {
   return instance.post(MODEL_PREFIX + '/menu/queryMenuList', param)
 }
 
+// 新增菜单
+export function addMenu(menu) {
+  return instance.post(MODEL_PREFIX + '/menu/addMenu', menu)
+}
+
+
 

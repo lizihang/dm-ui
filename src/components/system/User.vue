@@ -26,7 +26,8 @@
       <el-button type="success" @click="openUpdateDialog" size="mini">修改</el-button>
       <el-button type="danger" @click="deleteUser" size="mini">删除</el-button>
     </el-row>
-    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="550">
+    <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px" :highlight-current-row="true" @current-change="handleRowChange" :height="540"
+              :header-cell-style="{ textAlign: 'center' }">
       <!-- 暂时不用这种在行中放操作按钮，样式没调比较丑
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
@@ -44,7 +45,7 @@
           <el-radio :label="scope.row.id" v-model="radioId">&nbsp;</el-radio>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id" width="80" sortable fixed="left"></el-table-column>
+      <el-table-column prop="id" label="id" width="80" fixed="left"></el-table-column>
       <el-table-column prop="username" label="姓名" width="180" fixed="left"></el-table-column>
       <el-table-column prop="nickname" label="昵称" width="180" fixed="left"></el-table-column>
       <el-table-column prop="status" label="状态" width="80" :formatter="statusFormatter" fixed="left"></el-table-column>
@@ -95,7 +96,7 @@
 
 <script>
 import {queryUsers, updateUser, deleteUser} from "@/api/user";
-import {queryDictInfo} from "@/api/system";
+import {queryDictDetail} from "@/api/system";
 import {selectDictValue} from "@/utils";
 
 export default {
@@ -138,7 +139,7 @@ export default {
     },
     // 查询状态字典
     getStatus() {
-      queryDictInfo("dict_user_status").then(res => {
+      queryDictDetail("dict_user_status").then(res => {
         this.dict_user_status = res.data.data
       })
     },

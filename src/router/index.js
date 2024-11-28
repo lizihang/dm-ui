@@ -94,7 +94,7 @@ const routes = [
   {
     path: '/chat',
     component: () => import('../views/Home.vue'),
-    meta: {title: 'ChatLM'},
+    meta: {title: 'ChatGLM'},
     children: [
       {
         path: 'page',
@@ -105,6 +105,18 @@ const routes = [
         path: 'file',
         component: () => import('../views/chat/ChatFile.vue'),
         meta: {title: '文件', requireAuth: false},
+      },
+    ]
+  },
+  {
+    path: '/penetration',
+    component: () => import('../views/Home.vue'),
+    meta: {title: '渗透测试'},
+    children: [
+      {
+        path: 'nmap',
+        component: () => import('../views/penetration/Nmap.vue'),
+        meta: {title: 'nmap', requireAuth: false},
       },
     ]
   }
@@ -140,7 +152,7 @@ router.beforeEach((to, from, next) => {
 // 解决同一个router点击多次报错问题
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error => error)
+    return routerPush.call(this, location).catch(error => error)
 }
 
 export default router

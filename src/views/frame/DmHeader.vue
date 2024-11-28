@@ -83,7 +83,7 @@ export default {
         type: 'warning'
       }).then(() => {
         logout().then(res => {
-          if (res.data.status === 200) {
+          if (res.data.status === 1) {
             this.$store.commit("delete_user")
             this.$store.commit("clean_tabs")
             this.$router.replace('/security')

@@ -73,7 +73,7 @@ export default {
   methods: {
     queryUserInfo() {
       queryUserInfo().then(res => {
-        if (res.data.status === 200) {
+        if (res.data.status === 1) {
           this.user = res.data.data;
         } else {
           this.$message.error(res.data.msg)

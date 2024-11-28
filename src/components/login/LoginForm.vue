@@ -92,7 +92,7 @@ export default {
           security(this.loginForm).then(res => {
             // 控制台打印信息
             console.log(res.data);
-            if (res.data.status === 200) {
+            if (res.data.status === 1) {
               // 登录成功，将user存到store中
               this.$store.commit("set_login_info", res.data.data);
               // 跳转页面

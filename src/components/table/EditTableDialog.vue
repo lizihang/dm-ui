@@ -72,7 +72,7 @@
       },
       "tableHeader": Array,
       // 主表主键
-      "mainPrimary": {},
+      "mainPrimary": String,
     },
     methods: {
       // 刷新按钮，如果有未保存的数据，弹框提示，仍然删除就刷新界面
@@ -96,7 +96,7 @@
         console.log("点击存盘按钮")
         // 需要父类实现
         this.$parent.saveDetail(this.saveData).then(res => {
-          if (res.data.status === 200) {
+          if (res.data.status === 1) {
             this.$message.success(res.data.msg);
           } else {
             this.$message.error(res.data.msg);
@@ -199,6 +199,9 @@
       // dialog关闭事件
       handleClose() {
         console.log("关闭dialog")
+        // 清空数据
+        this.tableData = []
+        this.saveData = []
         // 通知父组件关闭
         this.$emit("closeDialog")
       },
@@ -213,9 +216,13 @@
       },
       getData() {
         console.log("getData")
-        let data = this.$parent.queryDetail();
+        let data = this.$parent.queryDetail(this.mainPrimary);
+        console.log("data",data)
         if (data == null || data.length === 0) {
-          let record = Object.assign({}, this.mainPrimary)
+          // let record = Object.assign({}, this.mainPrimary)
+          let record = {
+            "dictId": this.mainPrimary
+          }
           record.model = "new"
           data.push(record)
         } else {
@@ -224,6 +231,7 @@
           })
         }
         this.tableData = data
+        console.log("this tableData ",this.tableData)
       },
       // 检查是否有未存盘数据，如果没有未存盘数据，返回true
       checkSaved() {

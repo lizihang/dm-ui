@@ -1,48 +1,34 @@
-import request from "@/api/index";
+import instance from "@/api/index";
 
-let MODEL_PREFIX = "todo";
-// 获取字典
+let MODEL_PREFIX = "dm-user";
+
+// 对象的方式传参，那么Content-Type: application/json;charset=UTF-8
 
 // 获取字典列表
-export function queryDictList(param) {
-  return request({
-    url: '/system/queryDictList',
-    method: 'post',
-    params: param
-  })
+export function queryDictPage(param) {
+  return instance.post(MODEL_PREFIX + '/dict/queryDictPage', param)
 }
 
 // 根据字典ID获取字典详情
-export function queryDictInfo(dictId) {
-  return request({
-    url: '/system/queryDictInfo',
-    method: 'post',
-    params: {
-      dictId: dictId
-    }
-  })
+export function queryDictDetail(dictId) {
+  let data = {
+    "dictId": dictId
+  }
+  return instance.post(MODEL_PREFIX + '/dict/queryDictDetail', data)
 }
 
 export function addDict(dict) {
-  return request({
-    url: '/system/addDict',
-    method: 'post',
-    data: dict
-  })
+  return instance.post(MODEL_PREFIX + '/dict/addDict', dict)
 }
 
 export function updateDict(dict) {
-  return request({
-    url: '/system/updateDict',
-    method: 'post',
-    data: dict
-  })
+  return instance.post(MODEL_PREFIX + '/dict/updateDict', dict)
 }
 
-export function deleteDict(dictId) {
-  return request({
-    url: '/system/deleteDict/' + dictId,
-    method: 'post'
-  })
+export function deleteDict(id) {
+  let data = {
+    "id": id
+  }
+  return instance.post(MODEL_PREFIX + '/dict/deleteDict', data)
 }
 

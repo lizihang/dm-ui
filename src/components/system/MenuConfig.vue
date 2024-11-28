@@ -15,33 +15,33 @@
       <el-button type="danger" @click="" size="mini">删除</el-button>
     </el-row>
     <el-table
-      :data="tableData" border tyle="width: 100%; margin-top: 20px"
-      :highlight-current-row="true"
-      row-key="id"
-      :tree-props="{children: 'subMenus', hasChildren: 'hasChildren'}">
+        :data="tableData" border tyle="width: 100%; margin-top: 20px"
+        :highlight-current-row="true"
+        row-key="id"
+        :tree-props="{children: 'subMenus', hasChildren: 'hasChildren'}">
       <!--<el-table-column prop="id" label="id" width="80"></el-table-column>-->
       <el-table-column prop="name" label="菜单名称" width="180"></el-table-column>
       <el-table-column prop="idx" label="排序" width="180"></el-table-column>
       <el-table-column prop="router" label="路由" width="180"></el-table-column>
-      <el-table-column v-if="show" prop="group" label="分组" width="180"></el-table-column>
-      <el-table-column v-if="show" prop="level" label="级别" width="180"></el-table-column>
-      <el-table-column v-if="show" prop="parent_id" label="父菜单" width="180"></el-table-column>
+      <el-table-column prop="level" label="级别" width="180"></el-table-column>
+      <el-table-column v-if="show" prop="parentId" label="父菜单" width="180"></el-table-column>
       <el-table-column v-if="show" prop="createUser" label="创建人" width="180"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
-      <el-table-column v-if="show" prop="modifyUser" label="修改人"></el-table-column>
-      <el-table-column v-if="show" prop="modifyTime" label="修改时间"></el-table-column>
+      <el-table-column v-if="show" prop="createTime" label="创建时间" width="180"></el-table-column>
+      <el-table-column v-if="show" prop="modifyUser" label="修改人" width="180"></el-table-column>
+      <el-table-column v-if="show" prop="modifyTime" label="修改时间" width="180"></el-table-column>
+      <el-table-column v-if="show" prop="modifyTime" label="修改时间" width="180"></el-table-column>
     </el-table>
-    
+
     <!-- 新增form -->
     <el-dialog title="添加菜单" :visible.sync="addFormVisible">
       <el-form ref="addForm" :model="addForm" label-width="80px">
         <el-form-item label="上级菜单">
           <treeselect
-            v-model="addForm.parent_id"
-            :options="tableData"
-            :normalizer="normalizer"
-            :show-count="true"
-            placeholder="选择上级菜单"
+              v-model="addForm.parentId"
+              :options="tableData"
+              :normalizer="normalizer"
+              :show-count="true"
+              placeholder="选择上级菜单"
           />
         </el-form-item>
         <el-form-item label="菜单类型">
@@ -72,13 +72,13 @@
 </template>
 
 <script>
-import {getMenus} from "@/api/user";
+import {getMenus, addMenu, addRole} from "@/api/user";
 import Treeselect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
   name: "MenuConfig",
-  components: { Treeselect },
+  components: {Treeselect},
   data() {
     return {
       show: false,
@@ -94,9 +94,8 @@ export default {
         name: '',
         idx: '',
         router: '',
-        group: '',
         level: '',
-        parent_id: '',
+        parentId: '',
         createUser: '',
         createTime: '',
         modifyUser: '',
@@ -118,13 +117,28 @@ export default {
       this.param = {};
       this.findAll();
     },
-    
     openAddDialog() {
       this.addForm = {};
       this.addFormVisible = true;
     },
     addMenu() {
-    
+      console.log(this.addForm);
+      //1 发送请求
+      addMenu(this.addForm).then(res => {
+        console.log(res.data);
+        if (res.data.status) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          });
+          // 隐藏表单
+          this.addFormVisible = false;
+          // 刷新数据
+          this.findAll()
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      })
     },
     /** 转换菜单数据结构 */
     normalizer(node) {
